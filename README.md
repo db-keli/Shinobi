@@ -1,3 +1,3 @@
 # Shinobi
 
-[](shinobi.svg)
+[](忍.png)
