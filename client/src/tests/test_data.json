@@ -1,0 +1,5 @@
+{
+    "url": "https://example.com",
+    "buildCommands": ["cargo test", "cargo run"],
+    "token": "some-random-token"
+}
