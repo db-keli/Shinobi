@@ -1,4 +1,4 @@
-package internal
+package qrcodegenerator
 
 import (
 	"log"
