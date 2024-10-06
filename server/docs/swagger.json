@@ -1,0 +1,28 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/v1/health": {
+            "get": {
+                "description": "Healthcheck endpoint",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ops"
+                ],
+                "summary": "Healthcheck",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

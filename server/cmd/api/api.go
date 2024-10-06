@@ -1,13 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
+	_ "github.com/db-keli/shinobi/docs"
 	"github.com/db-keli/shinobi/internal/store"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
 type application struct {
@@ -39,6 +42,9 @@ func (app *application) mount() http.Handler {
 
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/health", app.healthCheckHandler)
+
+		docsURL := fmt.Sprintf("%s/swagger/doc.json", app.config.addr)
+		r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL(docsURL)))
 	})
 
 	//auth

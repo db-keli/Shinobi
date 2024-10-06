@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	_ "github.com/db-keli/shinobi/docs"
 	"github.com/db-keli/shinobi/internal/db"
 	"github.com/db-keli/shinobi/internal/env"
 	"github.com/db-keli/shinobi/internal/store"

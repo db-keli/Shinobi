@@ -1,0 +1,17 @@
+info:
+  contact: {}
+paths:
+  /v1/health:
+    get:
+      description: Healthcheck endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Healthcheck
+      tags:
+      - ops
+swagger: "2.0"
