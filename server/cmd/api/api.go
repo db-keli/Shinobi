@@ -10,14 +10,14 @@ import (
 	"github.com/db-keli/shinobi/internal/store"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	httpSwagger "github.com/swaggo/http-swagger/v2"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type application struct {
 	config config
+	logger *log.Logger
 	store  store.Storage
 }
-
 type config struct {
 	addr string
 	db   dbConfig
@@ -43,15 +43,20 @@ func (app *application) mount() http.Handler {
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/health", app.healthCheckHandler)
 
+		//projects
+		r.Route("/projects", func(r chi.Router) {
+			r.Get("/show/{id}", app.showProjectHandler)
+			r.Get("/delete/{id}", app.deleteProjectHandler)
+			r.Post("/create", app.createProjectHandler)
+		})
+
+		r.Route("/users", func(r chi.Router) {
+			r.Post("/register", app.registerUserHandler)
+		})
 		docsURL := fmt.Sprintf("%s/swagger/doc.json", app.config.addr)
 		r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL(docsURL)))
 	})
 
-	//auth
-
-	//users
-
-	//projects
 	return r
 }
 

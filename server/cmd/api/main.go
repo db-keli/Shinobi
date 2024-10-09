@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	_ "github.com/lib/pq"
+
 	_ "github.com/db-keli/shinobi/docs"
 	"github.com/db-keli/shinobi/internal/db"
 	"github.com/db-keli/shinobi/internal/env"
