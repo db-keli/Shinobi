@@ -75,6 +75,40 @@ func (p ProjectStore) Get(id int64) (*Project, error) {
 	return &project, nil
 }
 
+func (p ProjectStore) GetByName(name string) (*Project, error) {
+	if name == "" {
+		return nil, ErrRecordNotFound
+	}
+
+	query := `
+        SELECT id, name, user_id, project_url, build_commands, keys_token, expire_at, created_at, updated_at
+        FROM projects
+        WHERE name = $1`
+
+	var project Project
+
+	err := p.db.QueryRow(query, name).Scan(
+		&project.ID,
+		&project.Name,
+		&project.UserID,
+		&project.ProjectUrl,
+		pq.Array(&project.BuildCommands),
+		&project.Keystoken,
+		&project.ExpireAt,
+		&project.CreatedAt,
+		&project.UpdatedAt,
+	)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+	return &project, nil
+}
+
 func (p ProjectStore) Update(project *Project) error {
 	return nil
 }

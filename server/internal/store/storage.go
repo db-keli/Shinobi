@@ -15,6 +15,7 @@ type Storage struct {
 		Get(id int64) (*Project, error)
 		Update(project *Project) error
 		Delete(id int64) error
+		GetByName(url string) (*Project, error)
 	}
 
 	Users interface {

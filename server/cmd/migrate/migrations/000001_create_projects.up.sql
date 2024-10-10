@@ -1,6 +1,6 @@
  CREATE TABLE projects (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL UNIQUE,
     user_id BIGINT NOT NULL,
     project_url VARCHAR(255),
     keys_token VARCHAR(255),

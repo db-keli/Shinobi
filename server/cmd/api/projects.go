@@ -101,3 +101,25 @@ func (api *application) deleteProjectHandler(w http.ResponseWriter, r *http.Requ
 	log.Printf("Successfully deleted project with ID: %d", id)
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func (api *application) createQRCodeHandler(w http.ResponseWriter, r *http.Request) {
+	name, err := api.readProjectNameParam(r)
+	log.Println(name)
+	if err != nil {
+		api.notFoundResponse(w, r)
+		return
+	}
+
+	project, err := api.store.Project.GetByName(name)
+	if err != nil {
+		switch {
+		case errors.Is(err, store.ErrRecordNotFound):
+			api.notFoundResponse(w, r)
+		default:
+			api.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	project.QRCGenerate()
+}

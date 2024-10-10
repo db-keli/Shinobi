@@ -48,6 +48,7 @@ func (app *application) mount() http.Handler {
 			r.Get("/show/{id}", app.showProjectHandler)
 			r.Get("/delete/{id}", app.deleteProjectHandler)
 			r.Post("/create", app.createProjectHandler)
+			r.Get("/getQRCode/{name}", app.createQRCodeHandler)
 		})
 
 		r.Route("/users", func(r chi.Router) {

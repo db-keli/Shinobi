@@ -33,6 +33,22 @@ func (app *application) readIDParam(r *http.Request) (int64, error) {
 	return id, nil
 }
 
+func (app *application) readProjectNameParam(r *http.Request) (string, error) {
+	ctx := r.Context()
+
+	routeCtx := chi.RouteContext(ctx)
+	if routeCtx == nil {
+		return "", errors.New("route context is not found")
+	}
+
+	projectURL := routeCtx.URLParam("name")
+	if projectURL == "" {
+		return "", errors.New("project parameter is missing")
+	}
+
+	return projectURL, nil
+}
+
 func (app *application) writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
 	js, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
