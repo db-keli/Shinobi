@@ -1,0 +1,2 @@
+ALTER TABLE projects
+    ADD COLUMN expire_at TIMESTAMP WITH TIME ZONE;

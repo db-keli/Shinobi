@@ -35,15 +35,17 @@ func (api *application) showProjectHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func (api *application) createProjectHandler(w http.ResponseWriter, r *http.Request) {
-	var input struct {
-		Name          string   `json:"name"`
-		ProjectUrl    string   `json:"project_url"`
-		BuildCommands []string `json:"build_commands"`
-	}
+	var input = store.ProjectInput{}
 
 	err := api.readJSON(w, r, &input)
 	if err != nil {
 		api.badRequestResponse(w, r, err)
+		return
+	}
+
+	token, err := input.EncryptKeys([]byte("thisisaverysecurekey1234"))
+	if err != nil {
+		api.serverErrorResponse(w, r, err)
 		return
 	}
 
@@ -52,6 +54,8 @@ func (api *application) createProjectHandler(w http.ResponseWriter, r *http.Requ
 		UserID:        1,
 		ProjectUrl:    input.ProjectUrl,
 		BuildCommands: input.BuildCommands,
+		Keystoken:     token,
+		ExpireAt:      input.ExpireAt,
 	}
 
 	v := validator.New()

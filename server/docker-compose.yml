@@ -1,11 +1,9 @@
-version: "3.8"
-
 services:
     db:
         image: postgres:16.3
         container_name: postgres-db
         environment:
-            POSTGRES_DB: social
+            POSTGRES_DB: shinobi-db
             POSTGRES_USER: admin
             POSTGRES_PASSWORD: adminpassword
         networks:

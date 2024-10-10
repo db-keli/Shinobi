@@ -15,6 +15,8 @@ type Project struct {
 	UserID        int64     `json:"user_id"`
 	ProjectUrl    string    `json:"project_url"`
 	BuildCommands []string  `json:"build_commands"`
+	Keystoken     string    `json:"keys_token"`
+	ExpireAt      time.Time `json:"expire_at"`
 	CreatedAt     time.Time `swaggertype:"string"`
 	UpdatedAt     time.Time `swaggertype:"string"`
 }
@@ -29,11 +31,11 @@ func ValidateProject(v *validator.Validator, project *Project) {
 
 func (p ProjectStore) Insert(project *Project) error {
 	query := `
-        INSERT INTO projects (name, user_id, project_url, build_commands, created_at, updated_at)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        INSERT INTO projects (name, user_id, project_url, build_commands, keys_token, expire_at, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING id`
 
-	args := []any{project.Name, project.UserID, project.ProjectUrl, pq.Array(project.BuildCommands), project.CreatedAt, project.UpdatedAt}
+	args := []any{project.Name, project.UserID, project.ProjectUrl, pq.Array(project.BuildCommands), project.Keystoken, project.ExpireAt, project.CreatedAt, project.UpdatedAt}
 
 	return p.db.QueryRow(query, args...).Scan(&project.ID)
 }
@@ -44,7 +46,7 @@ func (p ProjectStore) Get(id int64) (*Project, error) {
 	}
 
 	query := `
-        SELECT id, name, user_id, project_url, build_commands, created_at, updated_at
+        SELECT id, name, user_id, project_url, build_commands, keys_token, expire_at, created_at, updated_at
         FROM projects
         WHERE id = $1`
 
@@ -56,6 +58,8 @@ func (p ProjectStore) Get(id int64) (*Project, error) {
 		&project.UserID,
 		&project.ProjectUrl,
 		pq.Array(&project.BuildCommands),
+		&project.Keystoken,
+		&project.ExpireAt,
 		&project.CreatedAt,
 		&project.UpdatedAt,
 	)
