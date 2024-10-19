@@ -2,7 +2,7 @@
 
 ![](./忍.png)
 
-<img src="./忍.png" alt="Image" width="100" height="100">
+<img src="./忍.png" alt="Image" width="200" height="200">
 
 ###### Design
 ![](./architecture.svg)
