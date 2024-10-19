@@ -1,4 +1,4 @@
 # Shinobi
 
 ![](./忍.png)
-![](./architecture.svg)
+![](./architecture.png)
