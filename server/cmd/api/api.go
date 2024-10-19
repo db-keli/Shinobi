@@ -40,7 +40,10 @@ func (app *application) mount() http.Handler {
 
 	r.Use(middleware.Timeout(60 * time.Second))
 
+	r.Use(app.authenticate)
+
 	r.Route("/v1", func(r chi.Router) {
+		r.Use(app.authenticate)
 		r.Get("/health", app.healthCheckHandler)
 
 		//projects
@@ -51,9 +54,16 @@ func (app *application) mount() http.Handler {
 			r.Get("/getQRCode/{name}", app.createQRCodeHandler)
 		})
 
+		//users
 		r.Route("/users", func(r chi.Router) {
 			r.Post("/register", app.registerUserHandler)
 		})
+
+		//auth
+		r.Route("/auth", func(r chi.Router) {
+			r.Post("/token", app.createAuthenticationTokenHandler)
+		})
+
 		docsURL := fmt.Sprintf("%s/swagger/doc.json", app.config.addr)
 		r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL(docsURL)))
 	})

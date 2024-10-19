@@ -1,4 +1,4 @@
- CREATE TABLE projects (
+CREATE TABLE projects (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
     user_id BIGINT NOT NULL,

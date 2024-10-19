@@ -21,12 +21,16 @@ type Storage struct {
 	Users interface {
 		Insert(user *User) error
 		GetByEmail(email string) (*User, error)
+		GetForToken(tokenScope, tokenPlaintext string) (*User, error)
 	}
+
+	Tokens TokenStore
 }
 
 func NewPostgresStorage(db *sql.DB) Storage {
 	return Storage{
 		Project: &ProjectStore{db},
+		Tokens:  TokenStore{db},
 		Users:   &UsersStore{db},
 	}
 }
