@@ -1,5 +1,6 @@
 # Shinobi
 
 ![](./忍.png)
-![](./architecture.png)
+
+###### Design
 ![](./architecture.svg)
