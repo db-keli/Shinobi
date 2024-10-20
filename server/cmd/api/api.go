@@ -44,14 +44,20 @@ func (app *application) mount() http.Handler {
 
 	r.Route("/v1", func(r chi.Router) {
 		r.Use(app.authenticate)
-		r.Get("/health", app.healthCheckHandler)
+		r.Get("/health", app.requireAuthenticatedUser(app.healthCheckHandler))
 
 		//projects
 		r.Route("/projects", func(r chi.Router) {
-			r.Get("/show/{id}", app.showProjectHandler)
-			r.Get("/delete/{id}", app.deleteProjectHandler)
-			r.Post("/create", app.createProjectHandler)
-			r.Get("/getQRCode/{name}", app.createQRCodeHandler)
+			r.Get("/show/{id}", app.requireAuthenticatedUser(app.showProjectHandler))
+			r.Get("/delete/{id}", app.requireAuthenticatedUser(app.deleteProjectHandler))
+			r.Post("/create", app.requireAuthenticatedUser(app.createProjectHandler))
+			r.Get("/getQRCode/{name}", app.requireAuthenticatedUser(app.createQRCodeHandler))
+
+			//An endpoint that will check client and provide keys
+			r.Post("/getkeys", app.requireAuthenticatedUser(app.getKeysHandler))
+			r.Post("/allow", app.requireAuthenticatedUser(app.AddAllowedUserHandler))
+			r.Post("/deny", app.requireAuthenticatedUser(app.RemoveAllowedUserHandler))
+
 		})
 
 		//users

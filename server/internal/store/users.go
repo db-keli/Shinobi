@@ -188,7 +188,7 @@ func (m UsersStore) GetForToken(tokenScope, tokenPlaintext string) (*User, error
         ON users.id = tokens.user_id
         WHERE tokens.hash = $1
         AND tokens.scope = $2
-        AND tokens.expiry > $
+        AND tokens.expiry > $3
     `
 
 	args := []any{tokenHash[:], tokenScope, time.Now()}

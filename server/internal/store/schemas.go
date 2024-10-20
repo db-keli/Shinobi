@@ -7,7 +7,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"time"
 )
@@ -46,11 +45,11 @@ func (pi *ProjectInput) EncryptKeys(key []byte) (string, error) {
 func (pi *ProjectInput) DecryptKeys(encrypted string, key []byte) error {
 	ciphertext, err := base64.StdEncoding.DecodeString(encrypted)
 	if err != nil {
-		return err
+		return errors.New("failed to decode base64 ciphertext")
 	}
 
 	if len(ciphertext) < aes.BlockSize {
-		return fmt.Errorf("ciphertext too short")
+		return errors.New("ciphertext too short")
 	}
 
 	iv := ciphertext[:aes.BlockSize]
@@ -58,7 +57,7 @@ func (pi *ProjectInput) DecryptKeys(encrypted string, key []byte) error {
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return err
+		return errors.New("unable to create AES cipher")
 	}
 
 	decrypted := make([]byte, len(ciphertext))
@@ -66,5 +65,10 @@ func (pi *ProjectInput) DecryptKeys(encrypted string, key []byte) error {
 	stream := cipher.NewCFBDecrypter(block, iv)
 	stream.XORKeyStream(decrypted, ciphertext)
 
-	return json.Unmarshal(decrypted, &pi.Keys)
+	err = json.Unmarshal(decrypted, &pi.Keys)
+	if err != nil {
+		return errors.New("unable to unmarshal keys data")
+	}
+
+	return nil
 }

@@ -25,12 +25,19 @@ type Storage struct {
 	}
 
 	Tokens TokenStore
+
+	ProjectAllowedUser interface {
+		AddAllowedUser(projectID int64, userID int64) error
+		IsUserAllowed(projectID, userID int64) (bool, error)
+		RemoveAllowedUser(projectID, userID int64) error
+	}
 }
 
 func NewPostgresStorage(db *sql.DB) Storage {
 	return Storage{
-		Project: &ProjectStore{db},
-		Tokens:  TokenStore{db},
-		Users:   &UsersStore{db},
+		Project:            &ProjectStore{db},
+		Tokens:             TokenStore{db},
+		Users:              &UsersStore{db},
+		ProjectAllowedUser: &ProjectAllowedUsersStore{db},
 	}
 }

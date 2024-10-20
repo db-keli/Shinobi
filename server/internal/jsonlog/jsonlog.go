@@ -58,8 +58,10 @@ func (l *Logger) PrintFatal(err error, properties map[string]string) {
 }
 
 func (l *Logger) print(level Level, message string, properties map[string]string) (int, error) {
-// If the severity level of the log entry is below the minimum severity for the
-// logger, then return with no further action.
-    if level < l.minLevel {
-        return 0, nil
-    }
+	// If the severity level of the log entry is below the minimum severity for the
+	// logger, then return with no further action.
+	if level < l.minLevel {
+		return 0, nil
+	}
+	return 0, nil
+}
