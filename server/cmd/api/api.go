@@ -44,7 +44,7 @@ func (app *application) mount() http.Handler {
 
 	r.Route("/v1", func(r chi.Router) {
 		r.Use(app.authenticate)
-		r.Get("/health", app.requireAuthenticatedUser(app.healthCheckHandler))
+		r.Get("/health", app.healthCheckHandler)
 
 		//projects
 		r.Route("/projects", func(r chi.Router) {
