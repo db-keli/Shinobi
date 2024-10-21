@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
 	_ "github.com/db-keli/shinobi/docs"
@@ -12,10 +13,15 @@ import (
 )
 
 func main() {
+	err := godotenv.Load(".envrc")
+	if err != nil {
+		log.Fatalf("Error loading .envrc file: %v", err)
+	}
+
 	cfg := config{
 		addr: env.GetString("ADDR", ":8080"),
 		db: dbConfig{
-			addr:         env.GetString("DB_ADDR", "postgres://admin:adminpassword@localhost:5543/shinobi-db?sslmode=disable"),
+			addr:         env.GetString("DB_ADDR", "postgres://admin:adminpassword@localhost:5543/shinobi2-db?sslmode=disable"),
 			maxOpenConns: env.GetInt("DB_MAX_OPEN_CONNS", 5),
 			maxIdleConns: env.GetInt("DB_MAX_IDLE_CONNS", 2),
 			MaxIdleTime:  env.GetString("DB_MAX_IDLE_TIME", "15m"),

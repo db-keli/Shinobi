@@ -5,3 +5,7 @@ pub mod worker;
 
 #[cfg(test)]
 mod tests;
+
+pub mod api;
+pub mod cli;
+pub mod service;

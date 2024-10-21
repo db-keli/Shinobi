@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/db-keli/shinobi/internal/env"
 	"github.com/db-keli/shinobi/internal/store"
 )
 
@@ -142,7 +143,7 @@ func (app *application) getKeysHandler(w http.ResponseWriter, r *http.Request) {
 		Name: project.Name,
 	}
 
-	key := []byte("thisisaverysecurekey1234")
+	key := []byte(env.GetString("ENCRYPT_KEY", "thisisaverysecurekey1234"))
 
 	err = TempProject.DecryptKeys(input.Token, key)
 	if err != nil {

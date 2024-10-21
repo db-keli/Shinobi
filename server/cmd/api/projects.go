@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/db-keli/shinobi/internal/env"
 	"github.com/db-keli/shinobi/internal/store"
 	"github.com/db-keli/shinobi/internal/validator"
 )
@@ -43,7 +44,8 @@ func (api *application) createProjectHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	token, err := input.EncryptKeys([]byte("thisisaverysecurekey1234"))
+	key := []byte(env.GetString("ENCRYPT_KEY", "thisisaverysecurekey1234"))
+	token, err := input.EncryptKeys(key)
 	if err != nil {
 		api.serverErrorResponse(w, r, err)
 		return
