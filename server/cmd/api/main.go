@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load(".envrc")
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .envrc file: %v", err)
 	}
