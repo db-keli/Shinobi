@@ -1,5 +1,5 @@
 [phases.build]
-cmd = "go build -o /app/bin/main ./cmd/api"
+cmd = "go build -o out ./cmd/api"
 
 [phases.start]
-cmd = "/app/bin/main"
+cmd = "./out"
