@@ -12,6 +12,7 @@ COPY . .
 
 # Build the application
 RUN go build -o server ./cmd/api
+RUN ls -l /app
 
 # Create a smaller image for the final production stage
 FROM alpine:3.17
