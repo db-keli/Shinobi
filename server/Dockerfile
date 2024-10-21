@@ -34,5 +34,4 @@ COPY ./cmd/migrate/migrations /app/migrations
 
 RUN chmod +x /app/entrypoint.sh
 
-# Run the migrations when the container starts
-ENTRYPOINT [ "/app/entrypoint.sh" ]
+CMD ["/bin/sh", "-c", "/app/entrypoint.sh && ./server"]
