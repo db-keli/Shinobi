@@ -29,7 +29,7 @@ COPY --from=builder /app/server /app/server
 COPY entrypoint.sh /app/entrypoint.sh
 
 # Copy any migration files
-COPY /cmd/migrate/migrations /app/migrations
+#COPY ./cmd/migrate/migrations /app/migrations
 
 RUN chmod +x /app/entrypoint.sh
 
