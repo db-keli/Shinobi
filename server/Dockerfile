@@ -11,7 +11,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN go build -o server ./cmd/api
+RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/api
 RUN ls -l /app
 
 # Create a smaller image for the final production stage
