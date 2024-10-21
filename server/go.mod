@@ -1,6 +1,6 @@
 module github.com/db-keli/shinobi
 
-go 1.23.0
+go 1.23
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
