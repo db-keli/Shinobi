@@ -18,7 +18,7 @@ func main() {
 	// }
 
 	cfg := config{
-		addr: env.GetString("ADDR", "0.0.0.0") + env.GetString("PORT", ":8080"),
+		addr: env.GetString("ADDR", "0.0.0.0:") + env.GetString("PORT", "8080"),
 		db: dbConfig{
 			addr:         env.GetString("DB_ADDR", "postgres://admin:adminpassword@localhost:5543/shinobi2-db?sslmode=disable"),
 			maxOpenConns: env.GetInt("DB_MAX_OPEN_CONNS", 5),
