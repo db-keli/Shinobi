@@ -27,7 +27,7 @@ WORKDIR /app
 COPY --from=builder /app/server /app/server
 
 # Copy any migration files
-COPY migrations /app/migrations
+COPY /cmd/migrate/migrations /app/migrations
 
 # Run the migrations when the container starts
 CMD ["/bin/sh", "-c", "/usr/local/bin/migrate -path /app/migrations -database ${DATABASE_URL} up && /app/server"]
