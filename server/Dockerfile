@@ -26,8 +26,12 @@ WORKDIR /app
 # Copy the server binary from the builder stage
 COPY --from=builder /app/server /app/server
 
+COPY entrypoint.sh /app/entrypoint.sh
+
 # Copy any migration files
 COPY /cmd/migrate/migrations /app/migrations
 
+RUN chmod +x /app/entrypoint.sh
+
 # Run the migrations when the container starts
-CMD ["/bin/sh", "-c", "/usr/local/bin/migrate -path /app/migrations -database ${DATABASE_URL} up && /app/server"]
+ENTRYPOINT [ "/app/entrypoint.sh" ]
