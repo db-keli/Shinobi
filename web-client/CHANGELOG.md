@@ -20,3 +20,8 @@
 *  generator on the server side (af16ca65)
 *  qr code decoder (c7aaeb4f)
 
+##### Bug Fixes
+
+*  changelog path (29f26c6f)
+
+
