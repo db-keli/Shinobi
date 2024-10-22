@@ -8,7 +8,7 @@ const Changelog: React.FC = () => {
     useEffect(() => {
         const fetchChangelog = async () => {
             try {
-                const response = await fetch("../CHANGELOG.md");
+                const response = await fetch("/CHANGELOG.md");
 
                 if (response.ok) {
                     const markdown = await response.text();

@@ -2,6 +2,7 @@
 
 ##### Chores
 
+*  generate changelog (4b608a84)
 *  update gitignore and Cargo.toml (b9b5435c)
 *  image (510c1aca)
 *  image (f187be0e)
@@ -23,5 +24,4 @@
 ##### Bug Fixes
 
 *  changelog path (29f26c6f)
-
 
