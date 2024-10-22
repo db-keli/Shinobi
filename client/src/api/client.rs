@@ -1,3 +1,4 @@
+use crate::api::schemas::{AuthRequest, AuthResponse, CreateUserInput};
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};
 use reqwest::Client;
 use std::error::Error;
@@ -38,10 +39,71 @@ impl ApiService {
         }
     }
 
-    pub fn create_account(&self, name: &str, email: &str) -> Result<(), Box<dyn Error>> {
-        // Implement the logic to create an account
-        Ok(())
+    pub async fn create_account(
+        &self,
+        name: &str,
+        email: &str,
+        password: &str,
+    ) -> Result<(), Box<dyn Error>> {
+        let url = format!("{}/health", self.base_url);
+
+        let payload = CreateUserInput {
+            name: name.to_string(),
+            email: email.to_string(),
+            password: password.to_string(),
+        };
+
+        let response = self.client.post(url).json(&payload).send().await?;
+
+        match response.status() {
+            reqwest::StatusCode::CREATED => {
+                println!("Account created successfully!");
+                Ok(())
+            }
+            reqwest::StatusCode::BAD_REQUEST => {
+                let err_msg: serde_json::Value = response.json().await?;
+                println!("Bad request: {:?}", err_msg);
+                Err("Failed to create account: bad request".into())
+            }
+            reqwest::StatusCode::CONFLICT => {
+                let err_msg: serde_json::Value = response.json().await?;
+                println!("Conflict: {:?}", err_msg);
+                Err("Failed to create account: user already exists".into())
+            }
+            _ => {
+                let err_msg: serde_json::Value = response.json().await?;
+                println!("Error: {:?}", err_msg);
+                Err("Failed to create account: unknown error".into())
+            }
+        }
     }
 
+    pub async fn get_authentication_token(
+        &self,
+        email: &str,
+        password: &str,
+    ) -> Result<AuthResponse, Box<dyn Error>> {
+        let url = format!("{}/auth/token", self.base_url);
+
+        let payload = AuthRequest {
+            email: email.to_string(),
+            password: password.to_string(),
+        };
+
+        let response = self.client.post(&url).json(&payload).send().await?;
+
+        if response.status().is_success() {
+            let auth_response: AuthResponse = response.json().await?;
+            println!("Authentication token: {:?}", auth_response);
+            Ok(auth_response)
+        } else if response.status() == reqwest::StatusCode::UNAUTHORIZED {
+            println!("Invalid credentials provided.");
+            Err("Invalid credentials".into())
+        } else {
+            let error_msg: serde_json::Value = response.json().await?;
+            println!("Failed to authenticate: {:?}", error_msg);
+            Err("Authentication failed".into())
+        }
+    }
     // Additional methods for other endpoints can be added here
 }

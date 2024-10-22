@@ -7,4 +7,5 @@ pub fn build_cli() -> Command {
         .about("Interacts with a server using Rust and Reqwest")
         .subcommand(Command::new("health").about("Checks the server health status"))
         .subcommand(Command::new("list-users").about("Fetches the list of users from the server"))
+        .subcommand(Command::new("create-account").about("Create an account"))
 }
