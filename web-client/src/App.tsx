@@ -8,10 +8,10 @@ function App() {
         <Router>
             <nav className="py-2 md:py-4 items-end mx-auto text-white justify-end mt-20">
                 <div className="flex gap-4 items-end mx-auto max-w-5xl justify-end">
-                    <Link to="/" className="font-geist text-lg">
+                    <Link to="/" className="font-geist text-base">
                         Home
                     </Link>
-                    <Link to="/changelog" className="font-geist text-lg">
+                    <Link to="/changelog" className="font-geist text-base">
                         Changelog
                     </Link>
                 </div>
