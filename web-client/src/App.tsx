@@ -6,26 +6,26 @@ import HomePage from "./Homepage";
 function App() {
     return (
         <Router>
-            <nav className="py-2 md:py-4 items-end mx-auto text-white justify-end mt-20">
+            <nav className="py-2 md:py-4 items-end mx-auto justify-end mt-20">
                 <div className="flex gap-4 items-end mx-auto max-w-5xl justify-end">
                     <Link to="/" className="font-geist text-base">
-                        Home
+                        home
                     </Link>
                     <Link to="/changelog" className="font-geist text-base">
-                        Changelog
+                        changelog
                     </Link>
                 </div>
             </nav>
-            <section className="flex text-white bg-black flex-col items-center justify-center py-2 md:py-4 mt-20 max-w-5xl mx-auto text-left">
+            <section className="flex flex-col items-center justify-center py-2 md:py-4 max-w-5xl mx-auto text-left">
                 <Routes>
                     <Route path="/" element={<HomePage />} />
 
                     <Route path="/changelog" element={<Changelog />} />
                 </Routes>
             </section>
-            <footer className="mt-20 text-white">
+            <footer className="mt-32">
                 <section className="py-2 md:py-4 max-w-5xl mx-auto">
-                    <div className="mx-auto max-w-5xl flex flex-col md:flex-row gap-4 justify-between items-center">
+                    <div className="max-w-5xl bottom-0 absolute mb-8 flex flex-col md:flex-row gap-4 justify-between items-center">
                         <div className="flex gap-4">
                             <a
                                 href="https://github.com/db-keli"
@@ -48,28 +48,6 @@ function App() {
                                     ></path>
                                 </svg>
                             </a>
-                            <a
-                                href="https://x.com/dompehbright"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {/* Twitter/X icon */}
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                >
-                                    <path
-                                        d="M20.9608 5.25489C21.1399 4.84457 20.6691 4.49899 20.2745 4.71049C19.6557 5.04213 19.0045 5.31177 18.3302 5.5148C15.6161 2.12518 10.94 4.97882 11.631 8.63441C11.6534 8.75303 11.5652 8.86786 11.4445 8.86559C8.90196 8.81779 7.10701 7.99065 5.37498 6.04184C5.12908 5.76516 4.69391 5.7782 4.50788 6.09821C3.36354 8.06663 0.538612 14.1724 7.80588 16.6205C6.38468 17.5852 4.53053 18.4045 3.58068 18.7963C3.34575 18.8932 3.33572 19.2266 3.56743 19.3309C13.0505 23.6026 22.2799 17.3808 19.3574 7.58866C20.0384 6.91712 20.5813 6.12419 20.9608 5.25489Z"
-                                        stroke="currentcolor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    ></path>
-                                </svg>
-                            </a>
                         </div>
                         <div>
                             <a
@@ -79,7 +57,7 @@ function App() {
                                 <img
                                     src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
                                     alt="Buy Me A Coffee"
-                                    height={"40px"}
+                                    height={"30px"}
                                     width={"217px"}
                                 />
                             </a>

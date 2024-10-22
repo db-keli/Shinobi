@@ -27,14 +27,12 @@ const Changelog: React.FC = () => {
     }, []);
 
     return (
-        <div className="p-4 text-stone-50">
+        <div className="p-4">
             <h1 className="text-2xl font-geist mb-4">Changelog</h1>
             {loading ? (
                 <p className="font-geist">Loading changelog...</p>
             ) : (
-                <ReactMarkdown
-                    className={"prose text-white font-geist text-base"}
-                >
+                <ReactMarkdown className={"prose font-geist text-base"}>
                     {changelog}
                 </ReactMarkdown>
             )}
