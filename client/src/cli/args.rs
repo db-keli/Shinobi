@@ -6,6 +6,6 @@ pub fn build_cli() -> Command {
         .author("Your Name <your.email@example.com>")
         .about("Interacts with a server using Rust and Reqwest")
         .subcommand(Command::new("health").about("Checks the server health status"))
-        .subcommand(Command::new("list-users").about("Fetches the list of users from the server"))
-        .subcommand(Command::new("create-account").about("Create an account"))
+        .subcommand(Command::new("init").about("Initialize the CLI tool with a new configuration"))
+        .subcommand(Command::new("create_project").about("Create a new project"))
 }

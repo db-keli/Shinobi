@@ -1,6 +1,7 @@
-use crate::api::schemas::{AuthRequest, AuthResponse, CreateUserInput};
+use crate::api::schemas::{AuthRequest, AuthResponse, CreateUserInput, ProjectInput};
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};
 use reqwest::Client;
+use serde_json::Value;
 use std::error::Error;
 
 pub struct ApiService {
@@ -105,5 +106,37 @@ impl ApiService {
             Err("Authentication failed".into())
         }
     }
+
+    pub async fn create_project(
+        &self,
+        project_input: ProjectInput, // Use ProjectInput struct here
+    ) -> Result<Value, Box<dyn Error>> {
+        let url = format!("{}/projects/create", self.base_url);
+
+        // Create headers
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            AUTHORIZATION,
+            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
+        );
+
+        // Send the POST request with the serialized ProjectInput struct
+        let response = self
+            .client
+            .post(&url)
+            .headers(headers)
+            .json(&project_input) // Serialize the struct into JSON
+            .send()
+            .await?;
+
+        if response.status() == reqwest::StatusCode::CREATED {
+            let project: Value = response.json().await?;
+            Ok(project)
+        } else {
+            let error_msg: Value = response.json().await?;
+            Err(format!("Failed to create project: {:?}", error_msg).into())
+        }
+    }
+
     // Additional methods for other endpoints can be added here
 }
