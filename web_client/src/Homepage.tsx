@@ -5,6 +5,14 @@ const HomePage: React.FC = () => {
     return (
         <>
             <section className="py-2 md:py-4 text-center justify-center items-center max-w-5xl">
+                <div className="items-center mb-2 flex text-red-800 text-center">
+                    <div className="flex justify-center text-center">
+                        <p className="font-geist text-3xl mr-2">shinobi</p>
+                    </div>
+                    <div>
+                        <p className="text-3xl">忍</p>
+                    </div>
+                </div>
                 <div className="items-center flex text-center">
                     <div className="flex justify-center border rounded-md text-center">
                         <a
@@ -15,17 +23,9 @@ const HomePage: React.FC = () => {
                         </a>
                     </div>
                 </div>
-                <div className="items-center mt-5 flex text-center">
-                    <div className="flex justify-center text-center">
-                        <p className="font-geist text-5xl mr-2">shinobi</p>
-                    </div>
-                    <div>
-                        <p className="text-5xl">忍</p>
-                    </div>
-                </div>
 
                 <div className="flex p-3 justify-center items-center">
-                    <p className="font-geist mt-4 flex w-3/4 text-gray-400 font-semibold text-2xl">
+                    <p className="font-geist mt-4 text-left flex w-4/4 text-gray-400 font-medium text-xl">
                         shinobi is a secure client-server tool designed to help
                         project owners manage builds without exposing sensitive
                         information.
@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
                 </div>
 
                 <div className="flex p-3 justify-center items-center">
-                    <p className="font-geist mt-4 flex border p-6 rounded-lg w-3/4 font-light opacity-80 text-xl">
+                    <p className="font-geist mt-4 flex text-left w-4/4 font-light opacity-80 text-xl">
                         ever thought of sharing your secret project keys and
                         worrying someone might mess things up? with shinobi, you
                         don’t have to! it locks your keys in a digital vault and
@@ -47,20 +47,24 @@ const HomePage: React.FC = () => {
 
                 <div className="flex-col justify-center items-center">
                     <div>
-                        <p className="font-geist mt-4 text-3xl">
+                        <p className="font-geist mx-2 text-red-800 text-left mt-4 text-3xl">
                             why did i make shinobi?
                         </p>
 
-                        <p className="font-geist mt-2 text-xl mx-2 opacity-55">
-                            With Shinobi, you do not have to share your keys
-                            with freelancers or third-party developers to build
-                            a project. It encrypts sensitive keys on the server
-                            side, generates a secure token, and encodes it into
-                            a QR code. Clients can scan this QR code to set up
-                            projects without directly handling sensitive data.
-                            This approach ensures safe and streamlined
-                            management of project credentials in collaborative
-                            development environments.
+                        <p className="font-geist mt-2 pb-1 text-xl mx-2 text-left opacity-55">
+                            I've come across a numerous situations where
+                            freelancers and developer end up blackmailing
+                            project owners by holding their project keys
+                            hostage. And this is a way I choose to solve that
+                            problem.
+                        </p>
+                        <p className="text-left">
+                            <a
+                                className="border px-1 py-1 rounded-lg mx-2 text-left font-geist text-xs font-semibold"
+                                href="https://security.stackexchange.com/questions/213511/how-to-securely-share-sensitive-info-such-as-api-keys-with-freelancers"
+                            >
+                                see an example
+                            </a>
                         </p>
                     </div>
                 </div>
