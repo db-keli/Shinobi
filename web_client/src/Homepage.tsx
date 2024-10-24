@@ -7,10 +7,12 @@ const HomePage: React.FC = () => {
             <section className="py-2 md:py-4 text-center justify-center items-center max-w-5xl">
                 <div className="items-center mb-2 flex text-red-800 text-center">
                     <div className="flex justify-center text-center">
-                        <p className="font-geist text-3xl mr-2">shinobi</p>
+                        <p className="font-geist text-3xl max-sm:text-xl mr-2">
+                            shinobi
+                        </p>
                     </div>
                     <div>
-                        <p className="text-3xl">忍</p>
+                        <p className="text-3xl max-sm:text-xl">忍</p>
                     </div>
                 </div>
                 <div className="items-center flex text-center">
@@ -25,7 +27,7 @@ const HomePage: React.FC = () => {
                 </div>
 
                 <div className="flex p-3 justify-center items-center">
-                    <p className="font-geist mt-4 text-left flex w-4/4 text-gray-400 font-medium text-xl">
+                    <p className="font-geist mt-4 text-left max-sm:text-sm flex w-4/4 text-gray-400 font-medium text-xl">
                         shinobi is a secure client-server tool designed to help
                         project owners manage builds without exposing sensitive
                         information.
@@ -33,7 +35,7 @@ const HomePage: React.FC = () => {
                 </div>
 
                 <div className="flex p-3 justify-center items-center">
-                    <p className="font-geist mt-4 flex text-left w-4/4 font-light opacity-80 text-xl">
+                    <p className="font-geist mt-4 flex text-left w-4/4 max-sm:text-sm font-light opacity-80 text-xl">
                         ever thought of sharing your secret project keys and
                         worrying someone might mess things up? with shinobi, you
                         don’t have to! it locks your keys in a digital vault and
@@ -47,11 +49,11 @@ const HomePage: React.FC = () => {
 
                 <div className="flex-col justify-center items-center">
                     <div>
-                        <p className="font-geist mx-2 text-red-800 text-left mt-4 text-3xl">
+                        <p className="font-geist mx-2 text-red-800 max-sm:text-xl text-left mt-4 text-3xl">
                             why did i make shinobi?
                         </p>
 
-                        <p className="font-geist mt-2 pb-1 text-xl mx-2 text-left opacity-55">
+                        <p className="font-geist mt-2 pb-1 text-xl mx-2 text-left max-sm:text-sm opacity-55">
                             I've come across a numerous situations where
                             freelancers and developer end up blackmailing
                             project owners by holding their project keys

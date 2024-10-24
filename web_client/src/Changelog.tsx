@@ -32,7 +32,9 @@ const Changelog: React.FC = () => {
             {loading ? (
                 <p className="font-geist">Loading changelog...</p>
             ) : (
-                <ReactMarkdown className={"prose font-geist text-base"}>
+                <ReactMarkdown
+                    className={"prose font-geist max-sm:text-sm text-base"}
+                >
                     {changelog}
                 </ReactMarkdown>
             )}
