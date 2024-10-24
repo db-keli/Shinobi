@@ -46,7 +46,7 @@ impl ApiService {
         email: &str,
         password: &str,
     ) -> Result<(), Box<dyn Error>> {
-        let url = format!("{}/health", self.base_url);
+        let url = format!("{}/users/register", self.base_url);
 
         let payload = CreateUserInput {
             name: name.to_string(),
