@@ -2,7 +2,10 @@
 
 ##### Chores
 
+*  changelog (f8918fe8)
+*  generate changelog (a900692b)
 *  rename dir (b889bb44)
+*  generate changelog (4b608a84)
 *  update gitignore and Cargo.toml (b9b5435c)
 *  image (510c1aca)
 *  image (f187be0e)
@@ -24,5 +27,5 @@
 ##### Bug Fixes
 
 *  font sizes (cf2ed540)
-
-
+*  changelog path (69b81850)
+*  changelog path (29f26c6f)
