@@ -129,7 +129,8 @@ func (api *application) createQRCodeHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	w.Header().Set("Content-Type", "image/png")
-	w.Header().Set("Content-Disposition", "attachment; filename=\"qrcode.png\"")
+	filename := project.Name + "-qrcode.png"
+	w.Header().Set("Content-Disposition", "attachment; filename=\""+filename+"\"")
 	w.WriteHeader(http.StatusOK)
 
 	w.Write(qrCodeBytes)
