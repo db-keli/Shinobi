@@ -29,6 +29,7 @@ func (api *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 
 	err = user.Password.Set(input.Password)
 	if err != nil {
+
 		api.serverErrorResponse(w, r, err)
 		return
 	}
