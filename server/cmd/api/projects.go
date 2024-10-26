@@ -106,7 +106,6 @@ func (api *application) deleteProjectHandler(w http.ResponseWriter, r *http.Requ
 
 func (api *application) createQRCodeHandler(w http.ResponseWriter, r *http.Request) {
 	name, err := api.readProjectNameParam(r)
-	log.Println(name)
 	if err != nil {
 		api.notFoundResponse(w, r)
 		return
@@ -123,5 +122,15 @@ func (api *application) createQRCodeHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	project.QRCGenerate()
+	qrCodeBytes, err := project.QRCGenerate()
+	if err != nil {
+		api.serverErrorResponse(w, r, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "image/png")
+	w.Header().Set("Content-Disposition", "attachment; filename=\"qrcode.png\"")
+	w.WriteHeader(http.StatusOK)
+
+	w.Write(qrCodeBytes)
 }

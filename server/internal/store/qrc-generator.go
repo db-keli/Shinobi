@@ -3,35 +3,22 @@ package store
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 
-	"github.com/yeqown/go-qrcode/v2"
-	"github.com/yeqown/go-qrcode/writer/standard"
+	"github.com/skip2/go-qrcode"
 )
 
-func (p *Project) QRCGenerate() error {
-	// Marshal the Project struct to JSON
+func (p *Project) QRCGenerate() ([]byte, error) {
 	payloadData, err := json.Marshal(p)
 	if err != nil {
-		return fmt.Errorf("failed to marshal project to JSON: %w", err)
+		return nil, fmt.Errorf("failed to marshal project to JSON: %w", err)
 	}
 
-	qrc, err := qrcode.New(string(payloadData))
+	qrCode, err := qrcode.Encode(string(payloadData), qrcode.Medium, 256) // Adjust size as needed
 	if err != nil {
-		return fmt.Errorf("failed to create QR code: %w", err)
+		return nil, fmt.Errorf("failed to generate QR code: %w", err)
 	}
 
-	w, err := standard.New("qrcode.jpg")
-	if err != nil {
-		return fmt.Errorf("failed to create writer: %w", err)
-	}
-
-	if err = qrc.Save(w); err != nil {
-		return fmt.Errorf("failed to save QR code: %w", err)
-	}
-
-	log.Printf("QR Code generated successfully")
-	return nil
+	return qrCode, nil
 }
 
 // func QRCGenerator(payloadData []byte) {
