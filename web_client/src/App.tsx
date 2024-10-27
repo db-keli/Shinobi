@@ -6,17 +6,17 @@ import HomePage from "./Homepage";
 function App() {
     return (
         <Router>
-            <nav className="py-2 md:py-4 items-end mx-auto max-sm:m-2 max-sm:text-sm justify-end mt-20">
+            <nav className="py-2 md:py-4 items-end mx-auto max-sm:m-2 max-sm:text-xs justify-end mt-20">
                 <div className="flex gap-4 items-end mx-auto max-w-5xl justify-end">
-                    <Link to="/" className="font-geist text-base">
+                    <Link to="/" className="font-geist text-sm">
                         home
                     </Link>
-                    <Link to="/changelog" className="font-geist text-base">
+                    <Link to="/changelog" className="font-geist text-sm">
                         changelog
                     </Link>
                 </div>
             </nav>
-            <section className="flex flex-col items-center max-sm:m-2  max-sm:text-sm justify-center py-2 md:py-4 max-w-5xl mx-auto text-left">
+            <section className="flex flex-col items-center max-sm:m-2  max-sm:text-xs justify-center py-2 md:py-4 max-w-5xl mx-auto text-left">
                 <Routes>
                     <Route path="/" element={<HomePage />} />
 
