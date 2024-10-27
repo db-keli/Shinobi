@@ -134,7 +134,8 @@ curl -X POST "https://shinobi.up.railway.app/projects/deny" -H "Authorization: B
 
 ```bash
 curl -X POST "https://shinobi.up.railway.app/users/register" -d '{
-  "username": "<username>",
+  "name": "<name>",
+  "email": "<email>",
   "password": "<password>"
 }'
 ```
@@ -147,7 +148,7 @@ curl -X POST "https://shinobi.up.railway.app/users/register" -d '{
 
 ```bash
 curl -X POST "https://shinobi.up.railway.app/auth/token" -d '{
-  "username": "<username>",
+  "email": "<email>",
   "password": "<password>"
 }'
 ```
@@ -163,3 +164,10 @@ curl -X GET "https://shinobi.up.railway.app/swagger/doc.json"
 ```
 
 ---
+
+{
+	"authentication_token": {
+		"token": "6A5WARRAENHCEC3J3KCXCNWLY4",
+		"expiry": "2024-10-28T14:24:27.716633595Z"
+	}
+}
