@@ -2,6 +2,12 @@
 
 ##### Chores
 
+*  generate changelog (134b3a43)
+
+#### 0.0.0 (2024-10-24)
+
+##### Chores
+
 *  changelog (f8918fe8)
 *  generate changelog (a900692b)
 *  rename dir (b889bb44)
