@@ -44,3 +44,122 @@
 | **`README.md`**               | The main readme file that provides a project overview, setup instructions, and usage guidelines.                     |
 | **`scripts/`**                | Contains SQL scripts used for database setup and initialization.                                                     |
 | `db_init.sql`                 | SQL script for initializing the database schema.                                                                     |
+
+Here's the Markdown file with the commands ready for copy-pasting.
+
+---
+
+# Shinobi API Documentation
+
+**Domain**: `https://shinobi.up.railway.app`
+
+## Table of Contents
+
+- [Health Check](#health-check)
+- [Project Endpoints](#project-endpoints)
+- [User Endpoints](#user-endpoints)
+- [Authentication Endpoints](#authentication-endpoints)
+- [Swagger Documentation](#swagger-documentation)
+
+---
+
+## Health Check
+
+```bash
+curl -X GET "https://shinobi.up.railway.app/health"
+```
+
+---
+
+## Project Endpoints
+
+### Show Project Details by ID
+
+```bash
+curl -X GET "https://shinobi.up.railway.app/projects/show/{id}" -H "Authorization: Bearer <token>"
+```
+
+### Delete Project by ID
+
+```bash
+curl -X GET "https://shinobi.up.railway.app/projects/delete/{id}" -H "Authorization: Bearer <token>"
+```
+
+### Create New Project
+
+```bash
+curl -X POST "https://shinobi.up.railway.app/projects/create" -H "Authorization: Bearer <token>" -d '{
+  "project_name": "<project_name>",
+  "description": "<description>"
+}'
+```
+
+### Generate QR Code for Project by Name
+
+```bash
+curl -X GET "https://shinobi.up.railway.app/projects/getQRCode/{name}" -H "Authorization: Bearer <token>"
+```
+
+### Retrieve Project Keys
+
+```bash
+curl -X POST "https://shinobi.up.railway.app/projects/getkeys" -H "Authorization: Bearer <token>" -d '{
+  "project_id": "<project_id>"
+}'
+```
+
+### Add Allowed User to Project
+
+```bash
+curl -X POST "https://shinobi.up.railway.app/projects/allow" -H "Authorization: Bearer <token>" -d '{
+  "project_id": "<project_id>",
+  "user_id": "<user_id>"
+}'
+```
+
+### Remove Allowed User from Project
+
+```bash
+curl -X POST "https://shinobi.up.railway.app/projects/deny" -H "Authorization: Bearer <token>" -d '{
+  "project_id": "<project_id>",
+  "user_id": "<user_id>"
+}'
+```
+
+---
+
+## User Endpoints
+
+### Register New User
+
+```bash
+curl -X POST "https://shinobi.up.railway.app/users/register" -d '{
+  "username": "<username>",
+  "password": "<password>"
+}'
+```
+
+---
+
+## Authentication Endpoints
+
+### Generate Authentication Token
+
+```bash
+curl -X POST "https://shinobi.up.railway.app/auth/token" -d '{
+  "username": "<username>",
+  "password": "<password>"
+}'
+```
+
+---
+
+## Swagger Documentation
+
+### Access API Documentation
+
+```bash
+curl -X GET "https://shinobi.up.railway.app/swagger/doc.json"
+```
+
+---
