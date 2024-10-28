@@ -112,8 +112,8 @@ curl -X POST "https://shinobi.up.railway.app/projects/getkeys" -H "Authorization
 
 ```bash
 curl -X POST "https://shinobi.up.railway.app/projects/allow" -H "Authorization: Bearer <token>" -d '{
-  "project_id": "<project_id>",
-  "user_id": "<user_id>"
+  "project_name": "<project_name>",
+  "user_email": "<user_email>"
 }'
 ```
 

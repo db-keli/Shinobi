@@ -1,4 +1,6 @@
-use crate::api::schemas::{AuthRequest, AuthResponse, CreateUserInput, ProjectInput};
+use crate::api::schemas::{
+    AllowUserInput, AuthRequest, AuthResponse, CreateUserInput, ProjectInput,
+};
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};
 use reqwest::Client;
 use serde_json::Value;
@@ -22,17 +24,14 @@ impl ApiService {
     pub async fn get_health(&self) -> Result<String, Box<dyn Error>> {
         let url = format!("{}/health", self.base_url);
 
-        // Create a header map and set the Authorization header
         let mut headers = HeaderMap::new();
         headers.insert(
             AUTHORIZATION,
             HeaderValue::from_str(&format!("Bearer {}", self.token))?,
         );
 
-        // Send the GET request with headers
         let response = self.client.get(&url).headers(headers).send().await?;
 
-        // Ensure the request was successful
         if response.status().is_success() {
             Ok(response.text().await?)
         } else {
@@ -109,23 +108,21 @@ impl ApiService {
 
     pub async fn create_project(
         &self,
-        project_input: ProjectInput, // Use ProjectInput struct here
+        project_input: ProjectInput,
     ) -> Result<Value, Box<dyn Error>> {
         let url = format!("{}/projects/create", self.base_url);
 
-        // Create headers
         let mut headers = HeaderMap::new();
         headers.insert(
             AUTHORIZATION,
             HeaderValue::from_str(&format!("Bearer {}", self.token))?,
         );
 
-        // Send the POST request with the serialized ProjectInput struct
         let response = self
             .client
             .post(&url)
             .headers(headers)
-            .json(&project_input) // Serialize the struct into JSON
+            .json(&project_input)
             .send()
             .await?;
 
@@ -138,5 +135,32 @@ impl ApiService {
         }
     }
 
-    // Additional methods for other endpoints can be added here
+    pub async fn add_allowed_user(
+        &self,
+        allowed_user_input: AllowUserInput,
+    ) -> Result<Value, Box<dyn Error>> {
+        let url = format!("{}/projects/allow", self.token);
+
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            AUTHORIZATION,
+            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
+        );
+
+        let response = self
+            .client
+            .post(&url)
+            .headers(headers)
+            .json(&allowed_user_input)
+            .send()
+            .await?;
+
+        if response.status() == reqwest::StatusCode::CREATED {
+            let project: Value = response.json().await?;
+            Ok(project)
+        } else {
+            let error_msg: Value = response.json().await?;
+            Err(format!("Failed to create project: {:?}", error_msg).into())
+        }
+    }
 }
