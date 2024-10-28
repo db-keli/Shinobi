@@ -42,3 +42,11 @@ pub struct AllowUserInput {
     pub project_name: String,
     pub user_email: String,
 }
+
+#[derive(Serialize)]
+pub struct GetKeysInput {
+    #[serde(rename = "project_name")]
+    pub project_name: String,
+    #[serde(rename = "token")]
+    pub token: String,
+}

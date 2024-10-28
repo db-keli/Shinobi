@@ -12,7 +12,10 @@ fn main() {
 
     // Create the service locator and register services
     let mut service_locator = ServiceLocator::new();
-    let api_service = ApiService::new("http://localhost:8080/v1", "4P67ZGVHO73LU6KJNSO7MWGK3U");
+    let api_service = ApiService::new(
+        "https://shinobi.up.railway.app/v1",
+        "DU4SSHOV3W3VCHWZXZQFCLWWPE",
+    );
     service_locator.register(api_service);
 
     // Handle CLI commands and pass the service locator

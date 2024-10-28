@@ -1,10 +1,13 @@
 use crate::api::schemas::{
-    AllowUserInput, AuthRequest, AuthResponse, CreateUserInput, ProjectInput,
+    AllowUserInput, AuthRequest, AuthResponse, CreateUserInput, GetKeysInput, ProjectInput,
 };
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};
 use reqwest::Client;
 use serde_json::Value;
 use std::error::Error;
+use std::fmt::format;
+use std::fs::{self, OpenOptions};
+use std::io::{copy, prelude::*};
 
 pub struct ApiService {
     client: Client,
@@ -139,7 +142,7 @@ impl ApiService {
         &self,
         allowed_user_input: AllowUserInput,
     ) -> Result<Value, Box<dyn Error>> {
-        let url = format!("{}/projects/allow", self.token);
+        let url = format!("{}/projects/allow", self.base_url);
 
         let mut headers = HeaderMap::new();
         headers.insert(
@@ -156,6 +159,64 @@ impl ApiService {
             .await?;
 
         if response.status() == reqwest::StatusCode::CREATED {
+            let project: Value = response.json().await?;
+            Ok(project)
+        } else {
+            let error_msg: Value = response.json().await?;
+            Err(format!("Failed to create project: {:?}", error_msg).into())
+        }
+    }
+
+    pub async fn generate_qrcode_file(&self, project_name: String) -> Result<(), Box<dyn Error>> {
+        let url = format!("{}/projects/getQRCode/{}", self.base_url, project_name);
+
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            AUTHORIZATION,
+            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
+        );
+
+        let response = self.client.get(&url).headers(headers).send().await?;
+
+        if response.status() == reqwest::StatusCode::OK {
+            let mut file = OpenOptions::new()
+                .create(true)
+                .write(true)
+                .truncate(true)
+                .open("him.png")?;
+
+            let content = response.bytes().await?;
+            copy(&mut content.as_ref(), &mut file)?;
+
+            println!("Successfully created the QR code file as 'him.png'");
+            Ok(())
+        } else {
+            let error_msg: Value = response.json().await?;
+            Err(format!("Failed to create project: {:?}", error_msg).into())
+        }
+    }
+
+    pub async fn build_project(
+        &self,
+        input: GetKeysInput,
+    ) -> Result<serde_json::Value, Box<dyn Error>> {
+        let url = format!("{}/projects/getkeys", self.base_url);
+
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            AUTHORIZATION,
+            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
+        );
+
+        let response = self
+            .client
+            .post(&url)
+            .headers(headers)
+            .json(&input)
+            .send()
+            .await?;
+
+        if response.status() == reqwest::StatusCode::OK {
             let project: Value = response.json().await?;
             Ok(project)
         } else {
