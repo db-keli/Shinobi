@@ -138,3 +138,33 @@ func (p ProjectStore) Delete(id int64) error {
 
 	return nil
 }
+
+func (p ProjectStore) GetAll() (*Project, error) {
+	query := `
+        SELECT id, name, user_id, project_url, build_commands, keys_token, expire_at, created_at, updated_at
+        FROM projects`
+
+	var project Project
+
+	err := p.db.QueryRow(query).Scan(
+		&project.ID,
+		&project.Name,
+		&project.UserID,
+		&project.ProjectUrl,
+		pq.Array(&project.BuildCommands),
+		&project.Keystoken,
+		&project.ExpireAt,
+		&project.CreatedAt,
+		&project.UpdatedAt,
+	)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+	return &project, nil
+}
