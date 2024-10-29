@@ -17,33 +17,35 @@
 
 ###### Directory Structure
 
-| **Directory/File**            | **Description**                                                                                                      |
-|-------------------------------|----------------------------------------------------------------------------------------------------------------------|
-| **`cmd/`**                    | Holds the entry points for different components of the application.                                                   |
-| `api/`                        | Contains all the API-related code, including the main application logic and route handlers.                           |
-| `api.go`                      | Sets up the API routes and defines the overall structure of the server.                                               |
-| `context.go`                  | Manages context handling for API requests, useful for passing data through the request chain.                        |
-| `errors.go`                   | Contains custom error definitions and handling logic.                                                                |
-| `health.go`                   | Provides the health check endpoint implementation.                                                                   |
-| `helpers.go`                  | Contains utility functions that assist various parts of the code.                                                     |
-| `main.go`                     | The main entry point for starting the server.                                                                         |
-| `middleware.go`               | Defines middleware functions for request handling, such as authentication and logging.                               |
-| `project_allowed_users.go`    | Manages logic related to users allowed to access specific projects.                                                  |
-| `projects.go`                 | Handles CRUD operations for projects.                                                                                 |
-| `tokens.go`                   | Deals with authentication tokens for users.                                                                           |
-| `users.go`                    | Manages user registration, authentication, and user data.                                                             |
-| `migrate/migrations/`         | Contains database migration scripts that manage schema changes.                                                      |
-| **`docs/`**                   | Documentation files, focusing on internal project guidelines or API details (excluding Swagger files).               |
-| **`internal/`**               | Contains core components of the application that are not intended to be exposed publicly.                            |
-| `db/`                         | Contains database-related logic, including connection handling.                                                      |
-| `env/`                        | Handles environment variable management for the application.                                                         |
-| `jsonlog/`                    | Implements structured JSON logging for the server.                                                                   |
-| `qrcode-generator/`           | Manages QR code generation functionality.                                                                             |
-| `store/`                      | Includes data access layers for different entities like projects, users, tokens, and project permissions.            |
-| `validator/`                  | Implements data validation logic to ensure that the input meets the required criteria.                               |
-| **`README.md`**               | The main readme file that provides a project overview, setup instructions, and usage guidelines.                     |
-| **`scripts/`**                | Contains SQL scripts used for database setup and initialization.                                                     |
-| `db_init.sql`                 | SQL script for initializing the database schema.                                                                     |
+```
+├── cmd/                          # Entry points for different application components
+├── api/                          # Contains main application logic and route handlers
+│   ├── api.go                    # Sets up API routes and server structure
+│   ├── context.go                # Manages context handling for API requests
+│   ├── errors.go                 # Custom error definitions and handling logic
+│   ├── health.go                 # Health check endpoint implementation
+│   ├── helpers.go                # Utility functions for various code sections
+│   ├── main.go                   # Main entry point for starting the server
+│   ├── middleware.go             # Middleware for request handling, like auth and logging
+│   ├── project_allowed_users.go  # Manages allowed users for specific projects
+│   ├── projects.go               # CRUD operations for projects
+│   ├── tokens.go                 # Handles authentication tokens for users
+│   └── users.go                  # User registration, authentication, and data management
+├── migrate/
+│   └── migrations/               # Database migration scripts for schema changes
+├── docs/                         # Internal documentation, excluding Swagger files
+├── internal/                     # Core components not meant for public exposure
+│   ├── db/                       # Database logic, including connection handling
+│   ├── env/                      # Environment variable management
+│   ├── jsonlog/                  # Structured JSON logging for the server
+│   ├── qrcode-generator/         # QR code generation functionality
+│   └── store/                    # Data access layers for entities like users, projects
+├── validator/                    # Data validation to ensure input meets requirements
+├── README.md                     # Project overview, setup instructions, and usage
+└── scripts/
+    └── db_init.sql               # SQL script for initializing the database schema
+```
+
 
 Here's the Markdown file with the commands ready for copy-pasting.
 
@@ -167,7 +169,7 @@ curl -X GET "https://shinobi.up.railway.app/swagger/doc.json"
 
 {
 	"authentication_token": {
-		"token": "6A5WARRAENHCEC3J3KCXCNWLY4",
+		"token": "DU4SSHOV3W3VCHWZXZQFCLWWPE",
 		"expiry": "2024-10-28T14:24:27.716633595Z"
 	}
 }
