@@ -136,7 +136,7 @@ func (api *application) createQRCodeHandler(w http.ResponseWriter, r *http.Reque
 	w.Write(qrCodeBytes)
 }
 
-func (api *application) getProjectsHandler(w http.ResponseWriter, r *http.Request) {
+func (api *application) getAllProjectsHandler(w http.ResponseWriter, r *http.Request) {
 	projects, err := api.store.Project.GetAll()
 	if err != nil {
 		api.serverErrorResponse(w, r, err)

@@ -52,6 +52,7 @@ func (app *application) mount() http.Handler {
 			r.Get("/delete/{id}", app.requireAuthenticatedUser(app.deleteProjectHandler))
 			r.Post("/create", app.requireAuthenticatedUser(app.createProjectHandler))
 			r.Get("/getQRCode/{name}", app.requireAuthenticatedUser(app.createQRCodeHandler))
+			r.Get("/all", app.requireAuthenticatedUser(app.getAllProjectsHandler))
 
 			//An endpoint that will check client and provide keys
 			r.Post("/getkeys", app.requireAuthenticatedUser(app.getKeysHandler))
