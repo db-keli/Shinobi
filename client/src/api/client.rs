@@ -224,4 +224,24 @@ impl ApiService {
             Err(format!("Failed to create project: {:?}", error_msg).into())
         }
     }
+
+    pub async fn get_all_projects(&self) -> Result<serde_json::Value, Box<dyn Error>> {
+        let url = format!("{}/projects/all", self.base_url);
+
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            AUTHORIZATION,
+            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
+        );
+
+        let response = self.client.get(&url).headers(headers).send().await?;
+
+        if response.status() == reqwest::StatusCode::OK {
+            let projects: Value = response.json().await?;
+            Ok(projects)
+        } else {
+            let error_msg: Value = response.json().await?;
+            Err(format!("Failed to create project: {:?}", error_msg).into())
+        }
+    }
 }

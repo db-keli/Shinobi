@@ -104,4 +104,12 @@ pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
                 .block_on(build_project(api_service, input));
         }
     }
+
+    if let Some(_) = matches.subcommand_matches("all_projects") {
+        if let Some(api_service) = service_locator.get::<ApiService>() {
+            let _ = Runtime::new()
+                .unwrap()
+                .block_on(api_service.get_all_projects());
+        }
+    }
 }

@@ -10,5 +10,6 @@ pub fn build_cli() -> Command {
         .subcommand(Command::new("create_project").about("Create a new project"))
         .subcommand(Command::new("allow").about("Add an allowed user to your project"))
         .subcommand(Command::new("qrcode").about("generate qrcode file for project"))
+        .subcommand(Command::new("all_projects").about("List all projects"))
         .subcommand(Command::new("build").about("build or run the project"))
 }

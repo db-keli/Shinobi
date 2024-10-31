@@ -142,3 +142,21 @@ pub async fn build_project(
         }
     }
 }
+
+pub async fn get_all_projects(
+    api_service: &ApiService,
+) -> Result<serde_json::Value, Box<dyn Error>> {
+    match api_service.get_all_projects().await {
+        Ok(response) => Ok(response),
+        Err(e) => {
+            if e.is::<reqwest::Error>() {
+                eprintln!("Failed to communicate with the server: {}", e);
+            } else if e.is::<serde_json::Error>() {
+                eprintln!("Error parsing the server's response: {}", e);
+            } else {
+                eprintln!("An error occurred during project creation: {}", e);
+            }
+            Err(e)
+        }
+    }
+}
