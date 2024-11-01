@@ -137,7 +137,8 @@ func (api *application) createQRCodeHandler(w http.ResponseWriter, r *http.Reque
 }
 
 func (api *application) getAllProjectsHandler(w http.ResponseWriter, r *http.Request) {
-	projects, err := api.store.Project.GetAll()
+	user := api.contextGetUser(r)
+	projects, err := api.store.Project.GetAll(user.ID)
 	if err != nil {
 		api.serverErrorResponse(w, r, err)
 		return

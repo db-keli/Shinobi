@@ -16,7 +16,7 @@ type Storage struct {
 		Update(project *Project) error
 		Delete(id int64) error
 		GetByName(url string) (*Project, error)
-		GetAll() (*Project, error)
+		GetAll(user_id int64) (*Project, error)
 	}
 
 	Users interface {
