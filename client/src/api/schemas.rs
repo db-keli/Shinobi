@@ -16,7 +16,13 @@ pub struct AuthRequest {
 
 #[derive(Deserialize, Debug)]
 pub struct AuthResponse {
-    pub authentication_token: String,
+    pub authentication_token: TokenData,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct TokenData {
+    pub token: String,
+    pub expiry: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -29,4 +35,18 @@ pub struct ProjectInput {
     pub keys: HashMap<String, String>,
     #[serde(rename = "expire_at")]
     pub expire_at: DateTime<Utc>,
+}
+
+#[derive(Serialize)]
+pub struct AllowUserInput {
+    pub project_name: String,
+    pub user_email: String,
+}
+
+#[derive(Serialize)]
+pub struct GetKeysInput {
+    #[serde(rename = "project_name")]
+    pub project_name: String,
+    #[serde(rename = "token")]
+    pub token: String,
 }
