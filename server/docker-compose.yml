@@ -1,20 +1,20 @@
 services:
-    db:
-        image: postgres:16.3
-        container_name: postgres-db
-        environment:
-            POSTGRES_DB: shinobi-db
-            POSTGRES_USER: admin
-            POSTGRES_PASSWORD: adminpassword
-        networks:
-            - backend
-        volumes:
-            - db-data:/var/lib/postgresql/data
-        ports:
-            - "5543:5432"
+  db:
+    image: postgres:16.3
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: shinobi-db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+    networks:
+      - backend
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5543:5432"
 volumes:
-    db-data:
+  db-data:
 
 networks:
-    backend:
-        driver: bridge
+  backend:
+    driver: bridge

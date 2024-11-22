@@ -28,6 +28,7 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		app.failedValidationResponse(w, r, v.Errors)
 		return
 	}
+
 	// Lookup the user record based on the email address. If no matching user was
 	// found, then we call the app.invalidCredentialsResponse() helper to send a 401
 	// Unauthorized response to the client (we will create this helper in a moment).

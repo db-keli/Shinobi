@@ -59,6 +59,7 @@ func (app *application) mount() http.Handler {
 			r.Post("/allow", app.requireAuthenticatedUser(app.AddAllowedUserHandler))
 			r.Post("/deny", app.requireAuthenticatedUser(app.RemoveAllowedUserHandler))
 
+			r.Post("/generateAccessToken", app.requireAuthenticatedUser(app.GenerateTokenHandler(&store.KeysTokenStore{})))
 		})
 
 		//users
