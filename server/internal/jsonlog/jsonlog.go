@@ -43,9 +43,6 @@ func New(out io.Writer, minLevel Level) *Logger {
 	}
 }
 
-// Declare some helper methods for writing log entries at the different levels. Notice
-// that these all accept a map as the second parameter which can contain any arbitrary
-// 'properties' that you want to appear in the log entry.
 func (l *Logger) PrintInfo(message string, properties map[string]string) {
 	l.print(LevelInfo, message, properties)
 }
@@ -54,12 +51,10 @@ func (l *Logger) PrintError(err error, properties map[string]string) {
 }
 func (l *Logger) PrintFatal(err error, properties map[string]string) {
 	l.print(LevelFatal, err.Error(), properties)
-	os.Exit(1) // For entries at the FATAL level, we also terminate the application.
+	os.Exit(1)
 }
 
 func (l *Logger) print(level Level, message string, properties map[string]string) (int, error) {
-	// If the severity level of the log entry is below the minimum severity for the
-	// logger, then return with no further action.
 	if level < l.minLevel {
 		return 0, nil
 	}

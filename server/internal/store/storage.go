@@ -25,8 +25,7 @@ type Storage struct {
 		GetForToken(tokenScope, tokenPlaintext string) (*User, error)
 	}
 
-	Tokens    TokenStore
-	KeysToken KeysTokenStore
+	Tokens TokenStore
 
 	ProjectAllowedUser interface {
 		AddAllowedUser(projectID int64, userID int64) error
