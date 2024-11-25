@@ -44,3 +44,4 @@
 | **`README.md`**            | The main readme file that provides a project overview, setup instructions, and usage guidelines.          |
 | **`scripts/`**             | Contains SQL scripts used for database setup and initialization.                                          |
 | `db_init.sql`              | SQL script for initializing the database schema.                                                          |
+
