@@ -5,7 +5,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
 	_ "github.com/db-keli/shinobi/docs"
@@ -14,10 +13,10 @@ import (
 )
 
 func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Error loading .envrc file: %v", err)
-	}
+	// err := godotenv.Load(".env")
+	// if err != nil {
+	// 	log.Fatalf("Error loading .envrc file: %v", err)
+	// }
 
 	mo_var := os.Getenv("DB_MAX_OPEN_CONNS")
 	mo, err := strconv.Atoi(mo_var)
