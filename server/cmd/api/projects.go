@@ -135,3 +135,17 @@ func (api *application) createQRCodeHandler(w http.ResponseWriter, r *http.Reque
 
 	w.Write(qrCodeBytes)
 }
+
+func (api *application) getAllProjectsHandler(w http.ResponseWriter, r *http.Request) {
+	user := api.contextGetUser(r)
+	projects, err := api.store.Project.GetAll(user.ID)
+	if err != nil {
+		api.serverErrorResponse(w, r, err)
+		return
+	}
+
+	err = api.writeJSON(w, http.StatusOK, envelope{"projects": projects}, nil)
+	if err != nil {
+		api.serverErrorResponse(w, r, err)
+	}
+}

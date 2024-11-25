@@ -1,11 +1,14 @@
 use crate::api::client::ApiService;
-use crate::api::endpoints::{authenticate, check_health, create_account, create_project};
-use crate::api::schemas::ProjectInput;
+use crate::api::endpoints::{
+    add_allowed_user, authenticate, build_project, check_health, create_account, create_project,
+    generate_qrcode_file,
+};
+use crate::api::schemas::{AllowUserInput, GetKeysInput, ProjectInput};
+use crate::cli::helpers::{
+    prompt_for_build_commands, prompt_for_datetime, prompt_for_map, prompt_user_input,
+};
 use crate::service::ServiceLocator;
-use chrono::{DateTime, NaiveDate, TimeZone, Utc};
 use clap::ArgMatches;
-use std::collections::HashMap;
-use std::io::{self, Write};
 use tokio::runtime::Runtime;
 
 pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
@@ -57,90 +60,56 @@ pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
         }
     }
 
-    // More command handling logic can be added here
-}
+    if let Some(_) = matches.subcommand_matches("allow") {
+        if let Some(api_service) = service_locator.get::<ApiService>() {
+            let user_email = prompt_user_input("Enter user email:\n");
+            let project_name = prompt_user_input(&format!(
+                "Enter project name to allow for {}: \n",
+                user_email
+            ));
 
-fn prompt_user_input(prompt: &str) -> String {
-    let mut input = String::new();
-    print!("{}", prompt); // Print the prompt message
-    io::stdout().flush().unwrap(); // Ensure prompt is printed before input
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read input");
-    input.trim().to_string() // Return the input, trimmed of newline
-}
+            let input = AllowUserInput {
+                user_email,
+                project_name,
+            };
 
-fn prompt_for_map() -> HashMap<String, String> {
-    let mut map = HashMap::new();
-
-    loop {
-        // Ask for key
-        print!("Enter key name (or type 'done' to finish): ");
-        io::stdout().flush().unwrap(); // Ensure the prompt is displayed
-        let mut key = String::new();
-        io::stdin().read_line(&mut key).unwrap();
-        let key = key.trim().to_string();
-
-        if key == "done" {
-            break;
+            let _ = Runtime::new()
+                .unwrap()
+                .block_on(add_allowed_user(api_service, input));
         }
-
-        // Ask for value
-        print!("Enter value for '{}': ", key);
-        io::stdout().flush().unwrap();
-        let mut value = String::new();
-        io::stdin().read_line(&mut value).unwrap();
-        let value = value.trim().to_string();
-
-        // Insert the key-value pair into the map
-        map.insert(key, value);
     }
 
-    map
-}
+    if let Some(_) = matches.subcommand_matches("qrcode") {
+        if let Some(api_service) = service_locator.get::<ApiService>() {
+            let project_name = prompt_user_input("Enter project name: \n");
 
-fn prompt_for_build_commands() -> Vec<String> {
-    let mut vec = Vec::new();
-
-    loop {
-        print!("Enter a build command (or type 'done' to finish): ");
-        println!("example build command: 'cargo build");
-        println!("Make sure commands are in order");
-        io::stdout().flush().unwrap(); // Ensure the prompt is displayed
-        let mut input = String::new();
-        io::stdin().read_line(&mut input).unwrap();
-        let input = input.trim().to_string();
-
-        if input == "done" {
-            break;
+            let _ = Runtime::new()
+                .unwrap()
+                .block_on(generate_qrcode_file(api_service, project_name));
         }
-
-        vec.push(input);
     }
 
-    vec
-}
+    if let Some(_) = matches.subcommand_matches("build") {
+        if let Some(api_service) = service_locator.get::<ApiService>() {
+            let project_name = prompt_user_input("Enter project Name: ");
+            let token = prompt_user_input("enter token: ");
 
-fn prompt_for_datetime() -> DateTime<Utc> {
-    loop {
-        print!(
-            "Enter a date and time for expiry (in UTC, format YYYY-MM-DDTHH:MM:SS or YYYY-MM-DD): "
-        );
-        io::stdout().flush().unwrap(); // Ensure the prompt is displayed
-        let mut input = String::new();
-        io::stdin().read_line(&mut input).unwrap();
-        let input = input.trim();
+            let input = GetKeysInput {
+                project_name,
+                token,
+            };
 
-        // Try to parse the input as a full date-time first (YYYY-MM-DDTHH:MM:SS)
-        if let Ok(parsed_date) = Utc.datetime_from_str(input, "%Y-%m-%dT%H:%M:%S") {
-            return parsed_date;
+            let _ = Runtime::new()
+                .unwrap()
+                .block_on(build_project(api_service, input));
         }
+    }
 
-        // Try to parse the input as a date-only (YYYY-MM-DD), and assume time as 00:00:00
-        if let Ok(parsed_date) = NaiveDate::parse_from_str(input, "%Y-%m-%d") {
-            return Utc.from_utc_date(&parsed_date).and_hms(0, 0, 0);
+    if let Some(_) = matches.subcommand_matches("all_projects") {
+        if let Some(api_service) = service_locator.get::<ApiService>() {
+            let _ = Runtime::new()
+                .unwrap()
+                .block_on(api_service.get_all_projects());
         }
-
-        println!("Invalid date-time format. Please try again.");
     }
 }
