@@ -59,10 +59,7 @@ impl ApiService {
         let response = self.client.post(url).json(&payload).send().await?;
 
         match response.status() {
-            reqwest::StatusCode::CREATED => {
-                println!("Account created successfully!");
-                Ok(())
-            }
+            reqwest::StatusCode::CREATED => Ok(()),
             reqwest::StatusCode::BAD_REQUEST => {
                 let err_msg: serde_json::Value = response.json().await?;
                 println!("Bad request: {:?}", err_msg);
@@ -97,7 +94,6 @@ impl ApiService {
 
         if response.status().is_success() {
             let auth_response: AuthResponse = response.json().await?;
-            println!("Authentication token: {:?}", auth_response);
             Ok(auth_response)
         } else if response.status() == reqwest::StatusCode::UNAUTHORIZED {
             println!("Invalid credentials provided.");

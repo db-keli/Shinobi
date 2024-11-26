@@ -12,4 +12,29 @@ pub fn build_cli() -> Command {
         .subcommand(Command::new("qrcode").about("generate qrcode file for project"))
         .subcommand(Command::new("all_projects").about("List all projects"))
         .subcommand(Command::new("build").about("build or run the project"))
+        .subcommand(
+            Command::new("getkeys")
+                .about("get a particular key")
+                .arg(
+                    Arg::new("key")
+                        .help("The key to get")
+                        .short('k')
+                        .long("key")
+                        .required(true),
+                )
+                .arg(
+                    Arg::new("project")
+                        .help("The project to get the key from")
+                        .short('p')
+                        .long("project")
+                        .required(true),
+                )
+                .arg(
+                    Arg::new("token")
+                        .help("provide your token to get the key")
+                        .short('t')
+                        .long("token")
+                        .required(true),
+                ),
+        )
 }

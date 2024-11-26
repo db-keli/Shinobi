@@ -3,9 +3,10 @@ use crate::api::endpoints::{
     add_allowed_user, authenticate, build_project, check_health, create_account, create_project,
     generate_qrcode_file,
 };
-use crate::api::schemas::{AllowUserInput, GetKeysInput, ProjectInput};
+use crate::api::schemas::{AllowUserInput, GetKeysInput, ProjectInput, TokenData};
 use crate::cli::helpers::{
     prompt_for_build_commands, prompt_for_datetime, prompt_for_map, prompt_user_input,
+    save_token_toml,
 };
 use crate::service::ServiceLocator;
 use clap::ArgMatches;
@@ -33,9 +34,22 @@ pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
                 &password,
             ));
 
-            let _ = Runtime::new()
-                .unwrap()
-                .block_on(authenticate(api_service, &email, &password));
+            let token =
+                Runtime::new()
+                    .unwrap()
+                    .block_on(authenticate(api_service, &email, &password));
+
+            match token {
+                Ok(auth_response) => {
+                    let token_data = auth_response.authentication_token;
+
+                    if let Err(e) = save_token_toml(&token_data) {
+                        eprintln!("Failed to save token: {}", e);
+                    }
+                }
+
+                Err(e) => eprintln!("Failed to authenticate: {}", e),
+            }
         }
     }
 
@@ -93,6 +107,34 @@ pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
         if let Some(api_service) = service_locator.get::<ApiService>() {
             let project_name = prompt_user_input("Enter project Name: ");
             let token = prompt_user_input("enter token: ");
+
+            let input = GetKeysInput {
+                project_name,
+                token,
+            };
+
+            let _ = Runtime::new()
+                .unwrap()
+                .block_on(build_project(api_service, input));
+        }
+    }
+
+    if let Some(matches) = matches.subcommand_matches("getkeys") {
+        if let Some(api_service) = service_locator.get::<ApiService>() {
+            let project_name = matches
+                .get_one::<String>("project")
+                .cloned()
+                .unwrap_or_default();
+
+            let token = matches
+                .get_one::<String>("token")
+                .cloned()
+                .unwrap_or_default();
+
+            let key = matches
+                .get_one::<String>("key")
+                .cloned()
+                .unwrap_or_default();
 
             let input = GetKeysInput {
                 project_name,

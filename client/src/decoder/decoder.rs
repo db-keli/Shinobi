@@ -3,7 +3,7 @@ use image::ImageReader;
 use quircs::Quirc;
 use std::path::Path;
 
-use crate::errors::ImageReadError;
+use crate::errors::errors::ImageReadError;
 
 pub fn decode_qr_code(path: &Path) -> Result<(), ImageReadError> {
     let img = ImageReader::open(path)

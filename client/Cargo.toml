@@ -12,3 +12,5 @@ clap = { version = "4.1", features = ["derive"] }
 reqwest = { version = "0.11", features = ["json", "blocking"] }
 tokio = { version = "1", features = ["full"] }
 chrono = { version = "0.4", features = ["serde"] }
+toml = "0.8.19"
+ring = "0.17.8"
