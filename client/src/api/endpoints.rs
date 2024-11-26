@@ -16,11 +16,7 @@ pub async fn create_account(
     password: &str,
 ) -> Result<(), Box<dyn Error>> {
     match api_service.create_account(name, email, password).await {
-        Ok(created_account) => {
-            println!("Account created successfully!");
-            println!("{:?}", created_account);
-            Ok(())
-        }
+        Ok(_) => Ok(()),
         Err(e) => {
             if e.is::<reqwest::Error>() {
                 eprintln!("Failed to communicate with the server: {}", e);
@@ -61,7 +57,6 @@ pub async fn create_project(
     match api_service.create_project(input).await {
         Ok(project) => {
             println!("Project created successfully!");
-            println!("{:?}", project);
             Ok(project)
         }
         Err(e) => {

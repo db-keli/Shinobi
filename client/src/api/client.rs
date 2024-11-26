@@ -5,8 +5,7 @@ use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};
 use reqwest::Client;
 use serde_json::Value;
 use std::error::Error;
-use std::fmt::format;
-use std::fs::{self, OpenOptions};
+use std::fs::{OpenOptions};
 use std::io::{copy, prelude::*};
 
 pub struct ApiService {
@@ -59,10 +58,7 @@ impl ApiService {
         let response = self.client.post(url).json(&payload).send().await?;
 
         match response.status() {
-            reqwest::StatusCode::CREATED => {
-                println!("Account created successfully!");
-                Ok(())
-            }
+            reqwest::StatusCode::CREATED => Ok(()),
             reqwest::StatusCode::BAD_REQUEST => {
                 let err_msg: serde_json::Value = response.json().await?;
                 println!("Bad request: {:?}", err_msg);
@@ -97,7 +93,6 @@ impl ApiService {
 
         if response.status().is_success() {
             let auth_response: AuthResponse = response.json().await?;
-            println!("Authentication token: {:?}", auth_response);
             Ok(auth_response)
         } else if response.status() == reqwest::StatusCode::UNAUTHORIZED {
             println!("Invalid credentials provided.");
@@ -177,18 +172,18 @@ impl ApiService {
         );
 
         let response = self.client.get(&url).headers(headers).send().await?;
+        let filename = format!("{}.png", project_name);
 
         if response.status() == reqwest::StatusCode::OK {
             let mut file = OpenOptions::new()
                 .create(true)
                 .write(true)
                 .truncate(true)
-                .open("him.png")?;
+                .open(filename)?;
 
             let content = response.bytes().await?;
             copy(&mut content.as_ref(), &mut file)?;
 
-            println!("Successfully created the QR code file as 'him.png'");
             Ok(())
         } else {
             let error_msg: Value = response.json().await?;

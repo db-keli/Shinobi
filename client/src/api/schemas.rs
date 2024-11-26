@@ -14,12 +14,12 @@ pub struct AuthRequest {
     pub password: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct AuthResponse {
     pub authentication_token: TokenData,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct TokenData {
     pub token: String,
     pub expiry: String,
