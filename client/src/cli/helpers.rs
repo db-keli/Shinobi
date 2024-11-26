@@ -6,7 +6,6 @@ use ring::rand::{SecureRandom, SystemRandom};
 use std::collections::HashMap;
 use std::fs::{self, File};
 use std::io::{self, Write};
-use std::path::Path;
 
 const KEY: &[u8; 35] = b"an_example_very_secure_key_32bytes!";
 

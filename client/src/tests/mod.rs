@@ -1,5 +1,4 @@
 use crate::decoder::decoder::decode_qr_code;
-use crate::decoder::worker::DecodedData;
 use std::path::Path;
 
 #[cfg(test)]

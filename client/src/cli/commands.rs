@@ -3,7 +3,7 @@ use crate::api::endpoints::{
     add_allowed_user, authenticate, build_project, check_health, create_account, create_project,
     generate_qrcode_file,
 };
-use crate::api::schemas::{AllowUserInput, GetKeysInput, ProjectInput, TokenData};
+use crate::api::schemas::{AllowUserInput, GetKeysInput, ProjectInput};
 use crate::cli::helpers::{
     prompt_for_build_commands, prompt_for_datetime, prompt_for_map, prompt_user_input,
     save_token_toml,

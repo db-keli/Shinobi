@@ -5,8 +5,7 @@ use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};
 use reqwest::Client;
 use serde_json::Value;
 use std::error::Error;
-use std::fmt::format;
-use std::fs::{self, OpenOptions};
+use std::fs::{OpenOptions};
 use std::io::{copy, prelude::*};
 
 pub struct ApiService {
