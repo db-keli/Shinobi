@@ -8,7 +8,7 @@ pub struct DecodedData {
     token: String,
 }
 
-use crate::errors::WorkerError;
+use crate::errors::errors::WorkerError;
 
 impl DecodedData {
     pub fn new(url: String, commands: Vec<String>, token: String) -> Self {
