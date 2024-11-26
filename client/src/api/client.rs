@@ -173,18 +173,18 @@ impl ApiService {
         );
 
         let response = self.client.get(&url).headers(headers).send().await?;
+        let filename = format!("{}.png", project_name);
 
         if response.status() == reqwest::StatusCode::OK {
             let mut file = OpenOptions::new()
                 .create(true)
                 .write(true)
                 .truncate(true)
-                .open("him.png")?;
+                .open(filename)?;
 
             let content = response.bytes().await?;
             copy(&mut content.as_ref(), &mut file)?;
 
-            println!("Successfully created the QR code file as 'him.png'");
             Ok(())
         } else {
             let error_msg: Value = response.json().await?;

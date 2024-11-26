@@ -11,7 +11,7 @@ pub fn build_cli() -> Command {
         .subcommand(Command::new("allow").about("Add an allowed user to your project"))
         .subcommand(Command::new("qrcode").about("generate qrcode file for project"))
         .subcommand(Command::new("all_projects").about("List all projects"))
-        .subcommand(Command::new("build").about("build or run the project"))
+        //.subcommand(Command::new("build").about("build or run the project"))
         .subcommand(
             Command::new("getkeys")
                 .about("get a particular key")
@@ -30,10 +30,10 @@ pub fn build_cli() -> Command {
                         .required(true),
                 )
                 .arg(
-                    Arg::new("token")
-                        .help("provide your token to get the key")
-                        .short('t')
-                        .long("token")
+                    Arg::new("qrcode")
+                        .help("provide path to qrcode file")
+                        .short('q')
+                        .long("qrcode")
                         .required(true),
                 ),
         )

@@ -8,8 +8,11 @@ use crate::cli::helpers::{
     prompt_for_build_commands, prompt_for_datetime, prompt_for_map, prompt_user_input,
     save_token_toml,
 };
+use crate::decoder::decoder::decode_qr_code;
 use crate::service::ServiceLocator;
+
 use clap::ArgMatches;
+use std::path::Path;
 use tokio::runtime::Runtime;
 
 pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
@@ -103,21 +106,21 @@ pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
         }
     }
 
-    if let Some(_) = matches.subcommand_matches("build") {
-        if let Some(api_service) = service_locator.get::<ApiService>() {
-            let project_name = prompt_user_input("Enter project Name: ");
-            let token = prompt_user_input("enter token: ");
+    // if let Some(_) = matches.subcommand_matches("build") {
+    //     if let Some(api_service) = service_locator.get::<ApiService>() {
+    //         let project_name = prompt_user_input("Enter project Name: ");
+    //         let token = prompt_user_input("enter token: ");
 
-            let input = GetKeysInput {
-                project_name,
-                token,
-            };
+    //         let input = GetKeysInput {
+    //             project_name,
+    //             token,
+    //         };
 
-            let _ = Runtime::new()
-                .unwrap()
-                .block_on(build_project(api_service, input));
-        }
-    }
+    //         let _ = Runtime::new()
+    //             .unwrap()
+    //             .block_on(build_project(api_service, input));
+    //     }
+    // }
 
     if let Some(matches) = matches.subcommand_matches("getkeys") {
         if let Some(api_service) = service_locator.get::<ApiService>() {
@@ -126,8 +129,8 @@ pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
                 .cloned()
                 .unwrap_or_default();
 
-            let token = matches
-                .get_one::<String>("token")
+            let qrcode_file = matches
+                .get_one::<String>("qrcode")
                 .cloned()
                 .unwrap_or_default();
 
@@ -136,14 +139,26 @@ pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
                 .cloned()
                 .unwrap_or_default();
 
+            let token = decode_qr_code(Path::new(&qrcode_file)).unwrap().keys_token;
             let input = GetKeysInput {
                 project_name,
                 token,
             };
 
-            let _ = Runtime::new()
+            let keys = Runtime::new()
                 .unwrap()
-                .block_on(build_project(api_service, input));
+                .block_on(build_project(api_service, input))
+                .unwrap();
+
+            if let Some(api_value) = keys.get("keys").and_then(|keys_obj| keys_obj.get(key)) {
+                if let Some(api_str) = api_value.as_str() {
+                    println!("{}", api_str);
+                } else {
+                    eprintln!("Failed to extract key");
+                }
+            } else {
+                eprintln!("Failed to extract key");
+            }
         }
     }
 

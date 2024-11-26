@@ -24,7 +24,6 @@ pub fn prompt_for_map() -> HashMap<String, String> {
     let mut map = HashMap::new();
 
     loop {
-        // Ask for key
         print!("Enter key name (or type 'done' to finish): ");
         io::stdout().flush().unwrap();
         let mut key = String::new();
@@ -35,14 +34,12 @@ pub fn prompt_for_map() -> HashMap<String, String> {
             break;
         }
 
-        // Ask for value
         print!("Enter value for '{}': ", key);
         io::stdout().flush().unwrap();
         let mut value = String::new();
         io::stdin().read_line(&mut value).unwrap();
         let value = value.trim().to_string();
 
-        // Insert the key-value pair into the map
         map.insert(key, value);
     }
 
@@ -56,7 +53,7 @@ pub fn prompt_for_build_commands() -> Vec<String> {
         print!("Enter a build command (or type 'done' to finish): ");
         println!("example build command: 'cargo build");
         println!("Make sure commands are in order");
-        io::stdout().flush().unwrap(); // Ensure the prompt is displayed
+        io::stdout().flush().unwrap();
         let mut input = String::new();
         io::stdin().read_line(&mut input).unwrap();
         let input = input.trim().to_string();
@@ -76,17 +73,15 @@ pub fn prompt_for_datetime() -> DateTime<Utc> {
         print!(
             "Enter a date and time for expiry (in UTC, format YYYY-MM-DDTHH:MM:SS or YYYY-MM-DD): "
         );
-        io::stdout().flush().unwrap(); // Ensure the prompt is displayed
+        io::stdout().flush().unwrap();
         let mut input = String::new();
         io::stdin().read_line(&mut input).unwrap();
         let input = input.trim();
 
-        // Try to parse the input as a full date-time first (YYYY-MM-DDTHH:MM:SS)
         if let Ok(parsed_date) = Utc.datetime_from_str(input, "%Y-%m-%dT%H:%M:%S") {
             return parsed_date;
         }
 
-        // Try to parse the input as a date-only (YYYY-MM-DD), and assume time as 00:00:00
         if let Ok(parsed_date) = NaiveDate::parse_from_str(input, "%Y-%m-%d") {
             return Utc.from_utc_date(&parsed_date).and_hms(0, 0, 0);
         }
@@ -116,23 +111,19 @@ fn encrypt(data: &[u8]) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     let key = UnboundKey::new(&aead::AES_256_GCM, KEY).unwrap();
     let less_safe_key = LessSafeKey::new(key);
 
-    // Generate a random nonce
     let rng = SystemRandom::new();
     let mut nonce_bytes = [0u8; 12];
     rng.fill(&mut nonce_bytes).unwrap();
     let nonce = Nonce::assume_unique_for_key(nonce_bytes);
 
     let tag_len = aead::AES_256_GCM.tag_len();
-    // Prepare the buffer
     let mut in_out = data.to_vec();
     in_out.extend_from_slice(&vec![0u8; tag_len]);
 
-    // Encrypt in place
     less_safe_key
         .seal_in_place_append_tag(nonce, Aad::empty(), &mut in_out)
         .unwrap();
 
-    // Prepend the nonce to the ciphertext
     let mut result = nonce_bytes.to_vec();
     result.extend_from_slice(&in_out);
     Ok(result)
@@ -147,11 +138,9 @@ fn decrypt(data: &[u8]) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     let key = UnboundKey::new(&aead::AES_256_GCM, KEY).unwrap();
     let less_safe_key = LessSafeKey::new(key);
 
-    // Extract the nonce and ciphertext
     let (nonce_bytes, ciphertext) = data.split_at(12);
     let nonce = Nonce::assume_unique_for_key(<[u8; 12]>::try_from(nonce_bytes)?);
 
-    // Decrypt in place
     let mut in_out = ciphertext.to_vec();
     let plaintext = less_safe_key
         .open_in_place(nonce, Aad::empty(), &mut in_out)

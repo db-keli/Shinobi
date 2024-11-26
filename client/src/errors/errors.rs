@@ -11,6 +11,7 @@ pub enum ImageReadError {
     ImgError(ImageError),
     DecodeError(DecodeError),
     ExtractError(ExtractError),
+    JsonError(serde_json::Error),
 }
 
 impl From<ImageError> for ImageReadError {
@@ -44,6 +45,7 @@ impl fmt::Display for ImageReadError {
             ImageReadError::ImgError(err) => write!(f, "Image error: {}", err),
             ImageReadError::DecodeError(err) => write!(f, "Decode error: {}", err),
             ImageReadError::ExtractError(err) => write!(f, "Extract error: {}", err),
+            ImageReadError::JsonError(err) => write!(f, "JSON error: {}", err),
         }
     }
 }
