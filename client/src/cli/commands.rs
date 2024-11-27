@@ -155,22 +155,29 @@ pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
 
             let keys = Runtime::new()
                 .unwrap()
-                .block_on(build_project(api_service, input))
-                .unwrap();
+                .block_on(build_project(api_service, input));
 
-            if let Some(keys_obj) = keys.get("keys").and_then(|keys| keys.as_object()) {
-                let mut env_vars = HashMap::new();
-                for (key_name, value) in keys_obj {
-                    if let Some(value_str) = value.as_str() {
-                        env_vars.insert(key_name.clone(), value_str.to_string());
+            match keys {
+                Ok(keys) => {
+                    if let Some(keys_obj) = keys.get("keys").and_then(|keys| keys.as_object()) {
+                        let mut env_vars = HashMap::new();
+                        for (key_name, value) in keys_obj {
+                            if let Some(value_str) = value.as_str() {
+                                env_vars.insert(key_name.clone(), value_str.to_string());
+                            } else {
+                                eprintln!(
+                                    "Failed to convert value of key '{}' to string",
+                                    key_name
+                                );
+                            }
+                        }
+
+                        run_command_with_env_vars(cmd, env_vars);
                     } else {
-                        eprintln!("Failed to convert value of key '{}' to string", key_name);
+                        eprintln!("Failed to extract keys object.");
                     }
                 }
-
-                run_command_with_env_vars(cmd, env_vars);
-            } else {
-                eprintln!("Failed to extract keys object.");
+                Err(_) => eprintln!("Failed to get keys"),
             }
         }
     }

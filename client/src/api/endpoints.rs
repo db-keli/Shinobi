@@ -128,7 +128,7 @@ pub async fn build_project(
             } else if e.is::<serde_json::Error>() {
                 eprintln!("Error parsing the server's response");
             } else {
-                eprintln!("An error occurred during project creation");
+                eprintln!("An error occurred while accessing project\nCheck project name and user permissions");
             }
             Err(e)
         }
