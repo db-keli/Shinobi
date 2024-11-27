@@ -19,11 +19,11 @@ pub async fn create_account(
         Ok(_) => Ok(()),
         Err(e) => {
             if e.is::<reqwest::Error>() {
-                eprintln!("Failed to communicate with the server: {}", e);
+                eprintln!("Failed to communicate with the server\nCheck internet connection");
             } else if e.is::<serde_json::Error>() {
-                eprintln!("Error parsing the server's response: {}", e);
+                eprintln!("Error parsing the server's response");
             } else {
-                eprintln!("An error occurred during account creation: {}", e);
+                eprintln!("An error occurred during account creation");
             }
             Err(e)
         }
@@ -38,13 +38,10 @@ pub async fn authenticate(
     match api_service.get_authentication_token(email, password).await {
         Ok(token) => Ok(token),
         Err(e) => {
-            if e.is::<reqwest::Error>() {
-                eprintln!("Failed to communicate with the server: {}", e);
-            } else if e.is::<serde_json::Error>() {
-                eprintln!("Error parsing the server's response: {}", e);
-            } else {
-                eprintln!("An error occurred during account creation: {}", e);
-            }
+            // if e.is::<reqwest::Error>() {
+            // } else if e.is::<serde_json::Error>() {
+            // } else {
+            // }
             Err(e)
         }
     }
@@ -61,11 +58,11 @@ pub async fn create_project(
         }
         Err(e) => {
             if e.is::<reqwest::Error>() {
-                eprintln!("Failed to communicate with the server: {}", e);
+                eprintln!("Failed to communicate with the server\nCheck internet connection");
             } else if e.is::<serde_json::Error>() {
-                eprintln!("Error parsing the server's response: {}", e);
+                eprintln!("Error parsing the server's response");
             } else {
-                eprintln!("An error occurred during project creation: {}", e);
+                eprintln!("An error occurred during project creation");
             }
             Err(e)
         }
@@ -86,11 +83,11 @@ pub async fn add_allowed_user(
         }
         Err(e) => {
             if e.is::<reqwest::Error>() {
-                eprintln!("Failed to communicate with the server: {}", e);
+                eprintln!("Failed to communicate with the server\nCheck internet connection");
             } else if e.is::<serde_json::Error>() {
-                eprintln!("Error parsing the server's response: {}", e);
+                eprintln!("Error parsing the server's response");
             } else {
-                eprintln!("An error occurred during project creation: {}", e);
+                eprintln!("An error occurred during project creation");
             }
             Err(e)
         }
@@ -108,11 +105,11 @@ pub async fn generate_qrcode_file(
         }
         Err(e) => {
             if e.is::<reqwest::Error>() {
-                eprintln!("Failed to communicate with the server: {}", e);
+                eprintln!("Failed to communicate with the server\nCheck internet connection");
             } else if e.is::<serde_json::Error>() {
-                eprintln!("Error parsing the server's response: {}", e);
+                eprintln!("Error parsing the server's response");
             } else {
-                eprintln!("An error occurred during project creation: {}", e);
+                eprintln!("An error occurred during project creation");
             }
             Err(e)
         }
@@ -127,11 +124,11 @@ pub async fn build_project(
         Ok(response) => Ok(response),
         Err(e) => {
             if e.is::<reqwest::Error>() {
-                eprintln!("Failed to communicate with the server: {}", e);
+                eprintln!("Failed to communicate with the server\nCheck internect connection");
             } else if e.is::<serde_json::Error>() {
-                eprintln!("Error parsing the server's response: {}", e);
+                eprintln!("Error parsing the server's response");
             } else {
-                eprintln!("An error occurred during project creation: {}", e);
+                eprintln!("An error occurred during project creation");
             }
             Err(e)
         }
@@ -145,11 +142,11 @@ pub async fn get_all_projects(
         Ok(response) => Ok(response),
         Err(e) => {
             if e.is::<reqwest::Error>() {
-                eprintln!("Failed to communicate with the server: {}", e);
+                eprintln!("Failed to communicate with the server\nCheck internet connection");
             } else if e.is::<serde_json::Error>() {
-                eprintln!("Error parsing the server's response: {}", e);
+                eprintln!("Error parsing the server's response");
             } else {
-                eprintln!("An error occurred during project creation: {}", e);
+                eprintln!("An error occurred during project creation");
             }
             Err(e)
         }

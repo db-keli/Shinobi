@@ -14,14 +14,7 @@ pub fn build_cli() -> Command {
         //.subcommand(Command::new("build").about("build or run the project"))
         .subcommand(
             Command::new("getkeys")
-                .about("get a particular key")
-                .arg(
-                    Arg::new("key")
-                        .help("The key to get")
-                        .short('k')
-                        .long("key")
-                        .required(true),
-                )
+                .about("export keys as environment variables")
                 .arg(
                     Arg::new("project")
                         .help("The project to get the key from")
@@ -35,6 +28,15 @@ pub fn build_cli() -> Command {
                         .short('q')
                         .long("qrcode")
                         .required(true),
+                )
+                .arg(
+                    Arg::new("cmd")
+                        .help("command to run after injecting secrets")
+                        .short('c')
+                        .long("cmd")
+                        .required(true)
+                        .trailing_var_arg(true)
+                        .num_args(1..),
                 ),
         )
 }

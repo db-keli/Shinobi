@@ -40,7 +40,6 @@ pub fn decode_qr_code(path: &Path) -> Result<Project, ImageReadError> {
                     ImageReadError::JsonError(serde_json::Error::custom("UTF-8 parsing failed"))
                 })?;
 
-                // Deserialize the JSON payload into the `Project` struct
                 let project: Project =
                     serde_json::from_str(payload).map_err(ImageReadError::JsonError)?;
                 return Ok(project);

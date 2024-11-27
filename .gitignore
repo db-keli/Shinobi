@@ -48,3 +48,5 @@ go.work.sum
 bin/
 .envrc
 .shinobi/
+*.png
+*.py

@@ -5,7 +5,7 @@ use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};
 use reqwest::Client;
 use serde_json::Value;
 use std::error::Error;
-use std::fs::{OpenOptions};
+use std::fs::OpenOptions;
 use std::io::{copy, prelude::*};
 
 pub struct ApiService {
@@ -61,17 +61,14 @@ impl ApiService {
             reqwest::StatusCode::CREATED => Ok(()),
             reqwest::StatusCode::BAD_REQUEST => {
                 let err_msg: serde_json::Value = response.json().await?;
-                println!("Bad request: {:?}", err_msg);
                 Err("Failed to create account: bad request".into())
             }
             reqwest::StatusCode::CONFLICT => {
                 let err_msg: serde_json::Value = response.json().await?;
-                println!("Conflict: {:?}", err_msg);
                 Err("Failed to create account: user already exists".into())
             }
             _ => {
                 let err_msg: serde_json::Value = response.json().await?;
-                println!("Error: {:?}", err_msg);
                 Err("Failed to create account: unknown error".into())
             }
         }
@@ -95,11 +92,9 @@ impl ApiService {
             let auth_response: AuthResponse = response.json().await?;
             Ok(auth_response)
         } else if response.status() == reqwest::StatusCode::UNAUTHORIZED {
-            println!("Invalid credentials provided.");
             Err("Invalid credentials".into())
         } else {
             let error_msg: serde_json::Value = response.json().await?;
-            println!("Failed to authenticate: {:?}", error_msg);
             Err("Authentication failed".into())
         }
     }
@@ -129,7 +124,7 @@ impl ApiService {
             Ok(project)
         } else {
             let error_msg: Value = response.json().await?;
-            Err(format!("Failed to create project: {:?}", error_msg).into())
+            Err(format!("{:?}", error_msg).into())
         }
     }
 
@@ -158,7 +153,7 @@ impl ApiService {
             Ok(project)
         } else {
             let error_msg: Value = response.json().await?;
-            Err(format!("Failed to create project: {:?}", error_msg).into())
+            Err(format!("{:?}", error_msg).into())
         }
     }
 
@@ -187,7 +182,7 @@ impl ApiService {
             Ok(())
         } else {
             let error_msg: Value = response.json().await?;
-            Err(format!("Failed to create project: {:?}", error_msg).into())
+            Err(format!("{:?}", error_msg).into())
         }
     }
 
@@ -216,7 +211,7 @@ impl ApiService {
             Ok(project)
         } else {
             let error_msg: Value = response.json().await?;
-            Err(format!("Failed to create project: {:?}", error_msg).into())
+            Err(format!("{:?}", error_msg).into())
         }
     }
 
@@ -236,7 +231,7 @@ impl ApiService {
             Ok(projects)
         } else {
             let error_msg: Value = response.json().await?;
-            Err(format!("Failed to create project: {:?}", error_msg).into())
+            Err(format!("{:?}", error_msg).into())
         }
     }
 }
