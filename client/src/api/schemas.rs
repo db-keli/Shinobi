@@ -43,7 +43,7 @@ pub struct AllowUserInput {
     pub user_email: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Clone)]
 pub struct GetKeysInput {
     #[serde(rename = "project_name")]
     pub project_name: String,
