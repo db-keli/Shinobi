@@ -10,7 +10,7 @@
 ##### Design
 
 <p align="center">
-  <img src="./shinobi_architecture.png" width="1000" style="margin-top: 10px;" />
+  <img src="./shinobi_architecture.png" />
 </p>
 
 <a href="https://www.buymeacoffee.com/dompehbright" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
