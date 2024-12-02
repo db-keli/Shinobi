@@ -2,6 +2,7 @@ use crate::api::client::ApiService;
 use std::error::Error;
 
 use super::schemas::{AllowUserInput, AuthResponse, GetKeysInput, ProjectInput};
+use shinobi_secrets_server::server::server;
 
 pub async fn check_health(api_service: &ApiService) -> Result<(), Box<dyn Error>> {
     let health_status = api_service.get_health().await?;
@@ -133,6 +134,14 @@ pub async fn build_project(
             Err(e)
         }
     }
+}
+
+pub async fn kick_off_server(
+    api_service: &ApiService,
+    input: server::GetKeysInput,
+) -> Result<(), Box<dyn Error>> {
+    let _ = api_service.kick_off_secret_server(input).await;
+    Ok(())
 }
 
 pub async fn get_all_projects(

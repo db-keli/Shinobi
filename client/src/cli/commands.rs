@@ -1,18 +1,18 @@
 use crate::api::client::ApiService;
 use crate::api::endpoints::{
-    add_allowed_user, authenticate, build_project, check_health, create_account, create_project,
-    generate_qrcode_file,
+    add_allowed_user, authenticate, check_health, create_account, create_project,
+    generate_qrcode_file, kick_off_server,
 };
-use crate::api::schemas::{AllowUserInput, GetKeysInput, ProjectInput};
+use crate::api::schemas::{AllowUserInput, ProjectInput};
 use crate::cli::helpers::{
     prompt_for_build_commands, prompt_for_datetime, prompt_for_map, prompt_user_input,
-    run_command_with_env_vars, save_token_toml,
+    save_token_toml,
 };
 use crate::decoder::decoder::decode_qr_code;
 use crate::service::ServiceLocator;
+use shinobi_secrets_server::server::server;
 
 use clap::ArgMatches;
-use std::collections::HashMap;
 use std::path::Path;
 use tokio::runtime::Runtime;
 
@@ -107,22 +107,6 @@ pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
         }
     }
 
-    // if let Some(_) = matches.subcommand_matches("build") {
-    //     if let Some(api_service) = service_locator.get::<ApiService>() {
-    //         let project_name = prompt_user_input("Enter project Name: ");
-    //         let token = prompt_user_input("enter token: ");
-
-    //         let input = GetKeysInput {
-    //             project_name,
-    //             token,
-    //         };
-
-    //         let _ = Runtime::new()
-    //             .unwrap()
-    //             .block_on(build_project(api_service, input));
-    //     }
-    // }
-
     if let Some(matches) = matches.subcommand_matches("getkeys") {
         if let Some(api_service) = service_locator.get::<ApiService>() {
             let project_name = matches
@@ -135,58 +119,24 @@ pub fn handle_commands(matches: ArgMatches, service_locator: &ServiceLocator) {
                 .cloned()
                 .unwrap_or_default();
 
-            let cmd: Vec<&str> = matches
-                .get_many::<String>("cmd")
-                .unwrap_or_default()
-                .map(|s| s.as_str())
-                .collect();
-
-            if cmd.is_empty() {
-                eprintln!("No command provided to execute after injecting secrets.");
-                return;
-            }
-
             let token = decode_qr_code(Path::new(&qrcode_file)).unwrap().keys_token;
 
-            let input = GetKeysInput {
-                project_name,
-                token,
+            let input = server::GetKeysInput {
+                project_name: project_name.clone(),
+                token: token.clone(),
             };
 
-            let keys = Runtime::new()
-                .unwrap()
-                .block_on(build_project(api_service, input));
-
-            match keys {
-                Ok(keys) => {
-                    if let Some(keys_obj) = keys.get("keys").and_then(|keys| keys.as_object()) {
-                        let mut env_vars = HashMap::new();
-                        for (key_name, value) in keys_obj {
-                            if let Some(value_str) = value.as_str() {
-                                env_vars.insert(key_name.clone(), value_str.to_string());
-                            } else {
-                                eprintln!(
-                                    "Failed to convert value of key '{}' to string",
-                                    key_name
-                                );
-                            }
-                        }
-
-                        run_command_with_env_vars(cmd, env_vars);
-                    } else {
-                        eprintln!("Failed to extract keys object.");
-                    }
-                }
-                Err(_) => eprintln!("Failed to get keys"),
-            }
-        }
-    }
-
-    if let Some(_) = matches.subcommand_matches("all_projects") {
-        if let Some(api_service) = service_locator.get::<ApiService>() {
             let _ = Runtime::new()
                 .unwrap()
-                .block_on(api_service.get_all_projects());
+                .block_on(kick_off_server(api_service, input));
+        }
+
+        if let Some(_) = matches.subcommand_matches("all_projects") {
+            if let Some(api_service) = service_locator.get::<ApiService>() {
+                let _ = Runtime::new()
+                    .unwrap()
+                    .block_on(api_service.get_all_projects());
+            }
         }
     }
 }

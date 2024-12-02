@@ -11,7 +11,6 @@ pub fn build_cli() -> Command {
         .subcommand(Command::new("allow").about("Add an allowed user to your project"))
         .subcommand(Command::new("qrcode").about("generate qrcode file for project"))
         .subcommand(Command::new("all_projects").about("List all projects"))
-        //.subcommand(Command::new("build").about("build or run the project"))
         .subcommand(
             Command::new("getkeys")
                 .about("export keys as environment variables")
@@ -28,15 +27,6 @@ pub fn build_cli() -> Command {
                         .short('q')
                         .long("qrcode")
                         .required(true),
-                )
-                .arg(
-                    Arg::new("cmd")
-                        .help("command to run after injecting secrets")
-                        .short('c')
-                        .long("cmd")
-                        .required(true)
-                        .trailing_var_arg(true)
-                        .num_args(1..),
                 ),
         )
 }

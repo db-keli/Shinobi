@@ -4,35 +4,61 @@ use crate::api::schemas::{
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};
 use reqwest::Client;
 use serde_json::Value;
+use shinobi_secrets_server::server::server::{self, SecretsServer};
 use std::error::Error;
 use std::fs::OpenOptions;
-use std::io::{copy, prelude::*};
+use std::io::copy;
 
+use serde_json::json;
 pub struct ApiService {
     client: Client,
     base_url: String,
-    token: String,
+    token: Option<String>,
 }
+use log::error;
 
 impl ApiService {
-    pub fn new(base_url: &str, token: &str) -> Self {
+    pub fn new(base_url: &str, token: Option<String>) -> Self {
         ApiService {
             client: Client::new(),
             base_url: base_url.to_string(),
-            token: token.to_string(),
+            token,
         }
+    }
+
+    async fn get_auth_header(&self) -> Result<HeaderMap, Box<dyn Error>> {
+        if let Some(ref token) = self.token {
+            let mut headers = HeaderMap::new();
+            headers.insert(
+                AUTHORIZATION,
+                HeaderValue::from_str(&format!("Bearer {}", token))?,
+            );
+            Ok(headers)
+        } else {
+            Err("Authentication token is missing".into())
+        }
+    }
+
+    pub async fn kick_off_secret_server(
+        &self,
+        input: server::GetKeysInput,
+    ) -> Result<(), Box<dyn Error>> {
+        let server = SecretsServer::new(
+            self.base_url.clone(),
+            self.token.clone().unwrap_or_default(),
+        );
+
+        let handle = server.run(input);
+
+        if let Err(e) = handle.await {
+            error!("Secrets server failed to run: {}", e);
+        }
+        Ok(())
     }
 
     pub async fn get_health(&self) -> Result<String, Box<dyn Error>> {
         let url = format!("{}/health", self.base_url);
-
-        let mut headers = HeaderMap::new();
-        headers.insert(
-            AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
-        );
-
-        let response = self.client.get(&url).headers(headers).send().await?;
+        let response = self.client.get(&url).send().await?;
 
         if response.status().is_success() {
             Ok(response.text().await?)
@@ -55,22 +81,15 @@ impl ApiService {
             password: password.to_string(),
         };
 
-        let response = self.client.post(url).json(&payload).send().await?;
+        let response = self.client.post(&url).json(&payload).send().await?;
 
         match response.status() {
             reqwest::StatusCode::CREATED => Ok(()),
-            reqwest::StatusCode::BAD_REQUEST => {
-                let err_msg: serde_json::Value = response.json().await?;
-                Err("Failed to create account: bad request".into())
+            reqwest::StatusCode::BAD_REQUEST | reqwest::StatusCode::CONFLICT => {
+                let err_msg: Value = response.json().await?;
+                Err(format!("Failed to create account: {:?}", err_msg).into())
             }
-            reqwest::StatusCode::CONFLICT => {
-                let err_msg: serde_json::Value = response.json().await?;
-                Err("Failed to create account: user already exists".into())
-            }
-            _ => {
-                let err_msg: serde_json::Value = response.json().await?;
-                Err("Failed to create account: unknown error".into())
-            }
+            _ => Err(format!("Failed to create account: {}", response.status()).into()),
         }
     }
 
@@ -89,13 +108,13 @@ impl ApiService {
         let response = self.client.post(&url).json(&payload).send().await?;
 
         if response.status().is_success() {
-            let auth_response: AuthResponse = response.json().await?;
-            Ok(auth_response)
-        } else if response.status() == reqwest::StatusCode::UNAUTHORIZED {
-            Err("Invalid credentials".into())
+            Ok(response.json().await?)
         } else {
-            let error_msg: serde_json::Value = response.json().await?;
-            Err("Authentication failed".into())
+            let error_msg: Value = response
+                .json()
+                .await
+                .unwrap_or_else(|_| json!({ "error": "Unknown error" }));
+            Err(format!("Authentication failed: {:?}", error_msg).into())
         }
     }
 
@@ -104,12 +123,7 @@ impl ApiService {
         project_input: ProjectInput,
     ) -> Result<Value, Box<dyn Error>> {
         let url = format!("{}/projects/create", self.base_url);
-
-        let mut headers = HeaderMap::new();
-        headers.insert(
-            AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
-        );
+        let headers = self.get_auth_header().await?;
 
         let response = self
             .client
@@ -120,11 +134,10 @@ impl ApiService {
             .await?;
 
         if response.status() == reqwest::StatusCode::CREATED {
-            let project: Value = response.json().await?;
-            Ok(project)
+            Ok(response.json().await?)
         } else {
             let error_msg: Value = response.json().await?;
-            Err(format!("{:?}", error_msg).into())
+            Err(format!("Failed to create project: {:?}", error_msg).into())
         }
     }
 
@@ -133,12 +146,7 @@ impl ApiService {
         allowed_user_input: AllowUserInput,
     ) -> Result<Value, Box<dyn Error>> {
         let url = format!("{}/projects/allow", self.base_url);
-
-        let mut headers = HeaderMap::new();
-        headers.insert(
-            AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
-        );
+        let headers = self.get_auth_header().await?;
 
         let response = self
             .client
@@ -149,22 +157,16 @@ impl ApiService {
             .await?;
 
         if response.status() == reqwest::StatusCode::CREATED {
-            let project: Value = response.json().await?;
-            Ok(project)
+            Ok(response.json().await?)
         } else {
             let error_msg: Value = response.json().await?;
-            Err(format!("{:?}", error_msg).into())
+            Err(format!("Failed to add allowed user: {:?}", error_msg).into())
         }
     }
 
     pub async fn generate_qrcode_file(&self, project_name: String) -> Result<(), Box<dyn Error>> {
         let url = format!("{}/projects/getQRCode/{}", self.base_url, project_name);
-
-        let mut headers = HeaderMap::new();
-        headers.insert(
-            AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
-        );
+        let headers = self.get_auth_header().await?;
 
         let response = self.client.get(&url).headers(headers).send().await?;
         let filename = format!("{}.png", project_name);
@@ -182,21 +184,13 @@ impl ApiService {
             Ok(())
         } else {
             let error_msg: Value = response.json().await?;
-            Err(format!("{:?}", error_msg).into())
+            Err(format!("Failed to generate QR code: {:?}", error_msg).into())
         }
     }
 
-    pub async fn build_project(
-        &self,
-        input: GetKeysInput,
-    ) -> Result<serde_json::Value, Box<dyn Error>> {
+    pub async fn build_project(&self, input: GetKeysInput) -> Result<Value, Box<dyn Error>> {
         let url = format!("{}/projects/getkeys", self.base_url);
-
-        let mut headers = HeaderMap::new();
-        headers.insert(
-            AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
-        );
+        let headers = self.get_auth_header().await?;
 
         let response = self
             .client
@@ -207,31 +201,24 @@ impl ApiService {
             .await?;
 
         if response.status() == reqwest::StatusCode::OK {
-            let project: Value = response.json().await?;
-            Ok(project)
+            Ok(response.json().await?)
         } else {
             let error_msg: Value = response.json().await?;
-            Err(format!("{:?}", error_msg).into())
+            Err(format!("Failed to build project: {:?}", error_msg).into())
         }
     }
 
-    pub async fn get_all_projects(&self) -> Result<serde_json::Value, Box<dyn Error>> {
+    pub async fn get_all_projects(&self) -> Result<Value, Box<dyn Error>> {
         let url = format!("{}/projects/all", self.base_url);
-
-        let mut headers = HeaderMap::new();
-        headers.insert(
-            AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", self.token))?,
-        );
+        let headers = self.get_auth_header().await?;
 
         let response = self.client.get(&url).headers(headers).send().await?;
 
         if response.status() == reqwest::StatusCode::OK {
-            let projects: Value = response.json().await?;
-            Ok(projects)
+            Ok(response.json().await?)
         } else {
             let error_msg: Value = response.json().await?;
-            Err(format!("{:?}", error_msg).into())
+            Err(format!("Failed to fetch projects: {:?}", error_msg).into())
         }
     }
 }
