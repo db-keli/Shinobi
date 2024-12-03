@@ -1,8 +1,10 @@
 # Shinobi
 
-<p align="left">
   <img src="./忍.png" width="150" align="left" style="margin-right: 10px;" />
-  A secure client-server tool that allows project owners to manage builds without exposing sensitive information. The server encrypts sensitive keys and generates a token, which is then encoded into a QR code. Clients can scan the QR code kick off a secrets server(daemon) that uses a token from the qrcode to retrieve the keys, the secrets server stores it in a secure memory block which i later safely retrieved by a client library in code. This approach helps ensure secure handling of credentials in collaborative environments.
+<p align="left">
+  
+#### How it works(First Design)
+A project owner creates a project data on the server, project data includes secrets. The secret is encrypted and stored on a database. To share secrets with others the project owner requests to generate a qrcode, which contains project information and a keys token to decrypt the encrypted keys stored on the database. With the cli tool other users can submit the qrcode for decryption. When the qrcode is decrypted you get the keystoken , which is then passed into a secrets_server(daemon), the secrets server uses the token and an authorization header to request for the secrets from the server, the server checks and if that user is allowed to have the keys, it uses the token to get the secrets to the secrets_server(daemon), this communication is also end to end encrypted. When the secrets server gets the secrets, it stores them in a secure memory block which is on a different processor. So to get the secrets you need inter processor communication and that’s what the library does. The library requests for the secrets (end to end encrypted) and the secrets_server checks if the library is authorized, if it is, it releases the secrets in a custom data type that will only print([PROTECTED]) when you try to view it as in print it or return it to stdout or stderr but will get you the value when you try to use it programmertically, you can perform operations on it but you can’t view it.
 </p>
 
 <br clear="left" />
@@ -13,6 +15,7 @@
   <img src="./shinobi_architecture.png" />
 </p>
 
+Note: this tool is not yet safe enough and work is in progress, it will go through a lot of phases to make sure it's safe enough
 <a href="https://www.buymeacoffee.com/dompehbright" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
-work in progress
+
